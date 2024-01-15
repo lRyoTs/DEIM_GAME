@@ -7,11 +7,6 @@ public class SoundManager : MonoBehaviour
     // Start is called before the first frame update
  public enum Sound
     {
-        ButtonClick,
-        ButtonOver,
-        SnakeDie,
-        SnakeEat,
-        SnakeMove
     }
 
     private static GameObject soundManagerGameObject;
