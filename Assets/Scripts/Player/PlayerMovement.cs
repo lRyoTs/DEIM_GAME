@@ -1,48 +1,41 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
+[RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerMovement : MonoBehaviour
 {
-    enum MovementType {
-        FieldMovement,
-        BattleMovement
-    }
+    private CharacterController _characterController;
+    [SerializeField] private Transform cam;
 
-    private float horizontalInput;
-    private float verticalInput;
+    public float speed = 6f;
     
+    public float turnSmoothTime = 0.15f;
+    private float turnSmoothVelocity;
 
-    private MovementType currentMovementType;
+    private void Awake()
+    {
+        _characterController = GetComponent<CharacterController>();
+    }
 
     private void Start()
     {
-        
+
     }
 
     private void Update()
     {
-        
-    }
-
-    private void FixedUpdate()
-    {
-        switch (currentMovementType) {
-            case MovementType.FieldMovement:
-                HandleFieldMovement();
-                break;
-             case MovementType.BattleMovement:
-                HandleBattleMovement();
-                break;
+        float horizontalInput = Input.GetAxisRaw("Horizontal");
+        float verticalInput = Input.GetAxisRaw("Vertical");
+        Vector3 direction = new Vector3 (horizontalInput,0f ,verticalInput).normalized;
+        if (direction.magnitude >= 0.1f) {
+            float targetAngle = Mathf.Atan2(direction.x,direction.y) * Mathf.Rad2Deg;
+            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
+            transform.rotation = Quaternion.Euler(0f,angle,0f);
+            _characterController.Move(direction * speed * Time.deltaTime);
         }
     }
 
-    private void HandleFieldMovement() {
-         
-    }
-
-    private void HandleBattleMovement() {
-    
-    }
 }
