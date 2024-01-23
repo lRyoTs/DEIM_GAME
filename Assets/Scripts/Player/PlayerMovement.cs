@@ -8,6 +8,7 @@ public class PlayerMovement : MonoBehaviour
 {
     //private CharacterController _characterController;
     [SerializeField] private Transform cam;
+    PlayerController playerController;
 
     public float speed = 3f;
     
@@ -21,7 +22,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Start()
     {
-
+        playerController = GetComponent<PlayerController>();
     }
 
     private void Update()
@@ -31,19 +32,13 @@ public class PlayerMovement : MonoBehaviour
         Vector3 direction = horizontalInput * cam.transform.right + verticalInput* cam.transform.forward;
         
         transform.Translate (direction.normalized * speed * Time.deltaTime,Space.World);
-
-       
-        /*
-        if (direction.magnitude >= 0.1f) {
-            float targetAngle = Mathf.Atan2(direction.x,direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
-            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
-            transform.rotation = Quaternion.Euler(0f,angle,0f);
-
-            //Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
-            //_characterController.Move(moveDir.normalized * speed * Time.deltaTime);
-        }
-        */
         
     }
 
+    private void HandleMovement() {
+        /*
+        Vector2 inputVector = gameInput.GetMovementVectorNormalized();
+        Vector3 direction = inputVector.x * cam.transform.right + inputVector.z * cam.transform.forward;
+        */
+    }
 }
