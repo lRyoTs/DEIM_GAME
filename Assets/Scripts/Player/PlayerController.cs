@@ -38,6 +38,7 @@ public class PlayerController : MonoBehaviour
         HandleMovement();
     }
 
+    
     private void HandleMovement() {
 
         groundedPlayer = _characterController.isGrounded;
@@ -46,6 +47,7 @@ public class PlayerController : MonoBehaviour
             playerVelocity.y = 0f;
         }
 
+        // Move by InputAction and looking and the camera direction
         Vector2 input = moveAction.ReadValue<Vector2>();
         Vector3 move = new Vector3(input.x, 0, input.y);
         move = move.x * cameraTransform.right.normalized + move.z * cameraTransform.forward.normalized;
@@ -62,8 +64,10 @@ public class PlayerController : MonoBehaviour
         _characterController.Move(playerVelocity * Time.deltaTime);
 
         //Rotate towards camera
+        
         float targetAngle = cameraTransform.eulerAngles.y;
         Quaternion rotation = Quaternion.Euler(0,targetAngle, 0);
         transform.rotation = Quaternion.Lerp(transform.rotation, rotation, softRotation * Time.deltaTime);
+        
     }
 }
