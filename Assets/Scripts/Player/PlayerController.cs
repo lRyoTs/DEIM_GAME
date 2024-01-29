@@ -50,6 +50,7 @@ public class PlayerController : MonoBehaviour
         // Move by InputAction and looking and the camera direction
         Vector2 input = moveAction.ReadValue<Vector2>();
         Vector3 move = new Vector3(input.x, 0, input.y);
+        
         move = move.x * cameraTransform.right.normalized + move.z * cameraTransform.forward.normalized;
         move.y = 0f;
         _characterController.Move(move * Time.deltaTime * playerSpeed);
@@ -63,11 +64,10 @@ public class PlayerController : MonoBehaviour
         playerVelocity.y += gravityValue * Time.deltaTime;
         _characterController.Move(playerVelocity * Time.deltaTime);
 
+       
         //Rotate towards camera
-        
         float targetAngle = cameraTransform.eulerAngles.y;
         Quaternion rotation = Quaternion.Euler(0,targetAngle, 0);
-        transform.rotation = Quaternion.Lerp(transform.rotation, rotation, softRotation * Time.deltaTime);
-        
+        transform.rotation = Quaternion.Lerp(transform.rotation, rotation, softRotation * Time.deltaTime);        
     }
 }
