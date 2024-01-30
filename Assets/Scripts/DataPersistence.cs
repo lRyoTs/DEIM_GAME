@@ -6,15 +6,18 @@ public class DataPersistence : MonoBehaviour
 {
     public static DataPersistence Instance { get; private set; }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public int battleExp { get; private set; }
 
-    // Update is called once per frame
-    void Update()
+    private void Awake()
     {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(this);
+        }
+        else {
+            Destroy(this)
+;       }
         
     }
 }

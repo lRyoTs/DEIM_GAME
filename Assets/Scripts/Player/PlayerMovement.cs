@@ -28,7 +28,7 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         float horizontalInput = Input.GetAxisRaw("Horizontal");
-        float verticalInput = Input.GetAxisRaw("Vertical");
+        float verticalInput = Input.GetAxisRaw("Vertical"); 
         Vector3 direction = horizontalInput * cam.transform.right + verticalInput* cam.transform.forward;
         
         transform.Translate (direction.normalized * speed * Time.deltaTime,Space.World);

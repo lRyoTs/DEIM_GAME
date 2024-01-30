@@ -10,6 +10,10 @@ public class Life : MonoBehaviour
     private int currentHealth;
 
 
+    /// <summary>
+    /// Initialize Healt base of entity's level
+    /// </summary>
+    /// <param name="level"></param>
     public void InitializeLife(int level)
     {
         maxHealth = SetMaxHealth(level);
@@ -29,7 +33,7 @@ public class Life : MonoBehaviour
             currentHealth += pointsToUpdate;
         }
 
-        if (currentHealth > maxHealth) //
+        if (currentHealth > maxHealth)
         {
             currentHealth = maxHealth;
         }
@@ -41,6 +45,8 @@ public class Life : MonoBehaviour
     {
         if (currentHealth <= 0)
         {
+            currentHealth = 0;
+            Debug.Log(currentHealth);
             return true;
         }
         return false;
