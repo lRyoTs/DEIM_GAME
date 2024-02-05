@@ -4,12 +4,14 @@ using UnityEngine;
 /// <summary>
 /// Script the serves as a base class for future enemies implementation
 /// </summary>
+[RequireComponent(typeof(Rigidbody),typeof(Life))]
 public abstract class Enemy : MonoBehaviour
 {
     #region Variables
     protected string enemyName;
     protected int level;
     protected Life enemyLife;
+    protected Rigidbody rb;
     protected int expValue; //Experience points given to the player once the enemy is destroyed
 
     protected float attackCooldownTimer;
@@ -20,9 +22,8 @@ public abstract class Enemy : MonoBehaviour
 
     private void Start()
     {
-        actionTimer = 2.5f;
-        level = 2;
-        enemyLife = GetComponent<Life>();
+        enemyLife = GetComponent<Life>(); //Setting enemy life requires level > 0
+        rb = GetComponent<Rigidbody>();
         enemyLife.InitializeLife(level);
     }
 
@@ -31,7 +32,8 @@ public abstract class Enemy : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    private void Update()
+
+    private void FixedUpdate()
     {
         if (!enemyLife.IsDead())
         {
@@ -39,16 +41,12 @@ public abstract class Enemy : MonoBehaviour
             {
                 Patrol();
             }
-            else
-            {
+            else {
                 Attack();
             }
         }
-        else
-        {
-            Debug.Log("Enemy died");
-        }
     }
+
 
     protected void OnDisable() {
         //Store expvalue in a variable to call once the battle is done

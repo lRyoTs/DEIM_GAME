@@ -16,8 +16,8 @@ public class DataPersistence : MonoBehaviour
             DontDestroyOnLoad(this);
         }
         else {
-            Destroy(this)
-;       }
+            Destroy(this);
+        }
         
     }
 }

@@ -9,18 +9,12 @@ public class Biped : Enemy
         name = gameObject.name;
         actionTimer = 2.5f;
         level = 2;
-        enemyLife = GetComponent<Life>();
-        enemyLife.InitializeLife(level);
-    }
-
-    private void Start()
-    {
-            
     }
 
     protected override void Patrol()
     {
-        transform.Translate(transform.forward * 4 * Time.deltaTime);
+        rb.MovePosition(transform.position + transform.forward* 4  * Time.deltaTime);
+        //transform.Translate(transform.forward * 4 * Time.deltaTime);
     }
 
     protected override void Attack()

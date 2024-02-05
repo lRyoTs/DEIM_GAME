@@ -1,9 +1,16 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(PlayerInput),typeof(CharacterController))]
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IProjectile
 {
+    public enum PlayerState {
+        OnField,
+        OnBattle,
+        Death
+    }
+
     [SerializeField]
     private float playerSpeed = 2.0f;
     [SerializeField]
@@ -20,12 +27,19 @@ public class PlayerController : MonoBehaviour
     private Vector3 playerVelocity;
     private bool groundedPlayer;
    
+    private PlayerState _state;
+
     private PlayerInput playerInput;
     private InputAction moveAction;
     private InputAction jumpAction;
 
+    public GameObject ProjectileSpawnPosition => throw new System.NotImplementedException();
+
+    public GameObject BulletPrefab => throw new System.NotImplementedException();
+
     private void Awake()
     {
+        _state = PlayerState.OnField;
         _characterController = GetComponent<CharacterController>();
         playerInput = GetComponent<PlayerInput>();
         moveAction = playerInput.actions["Move"];
@@ -35,10 +49,20 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        HandleMovement();
+        switch (_state) {
+            case PlayerState.OnField:
+                HandleMovement();
+                break;
+            case PlayerState.OnBattle:
+                Shoot();
+                Dodge();
+                break;
+            case PlayerState.Death:
+                break;
+        }
     }
 
-    
+
     private void HandleMovement() {
 
         groundedPlayer = _characterController.isGrounded;
@@ -53,7 +77,7 @@ public class PlayerController : MonoBehaviour
         
         move = move.x * cameraTransform.right.normalized + move.z * cameraTransform.forward.normalized;
         move.y = 0f;
-        _characterController.Move(move * Time.deltaTime * playerSpeed);
+        //_characterController.Move(move * Time.deltaTime * playerSpeed);
 
         // Changes the height position of the player..
         if (jumpAction.triggered && groundedPlayer)
@@ -62,7 +86,7 @@ public class PlayerController : MonoBehaviour
         }
 
         playerVelocity.y += gravityValue * Time.deltaTime;
-        _characterController.Move(playerVelocity * Time.deltaTime);
+        _characterController.Move((move + playerVelocity) * Time.deltaTime);
 
        
         //Rotate towards camera
@@ -70,4 +94,23 @@ public class PlayerController : MonoBehaviour
         Quaternion rotation = Quaternion.Euler(0,targetAngle, 0);
         transform.rotation = Quaternion.Lerp(transform.rotation, rotation, softRotation * Time.deltaTime);        
     }
+
+
+    private void Dodge()
+    {
+        throw new NotImplementedException();
+    }
+
+    private void Shoot() {
+        throw new System.NotImplementedException();
+    }
+
+   private void OnCollisionEnter(Collision collision)
+   {
+        if (collision.gameObject.CompareTag("Enemy")) {
+            playerInput.SwitchCurrentActionMap("PlayerOnBattle");
+            _state = PlayerState.OnBattle;
+        }
+          
+   }
 }
