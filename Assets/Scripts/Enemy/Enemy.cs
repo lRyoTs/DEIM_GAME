@@ -8,15 +8,20 @@ using UnityEngine;
 public abstract class Enemy : MonoBehaviour
 {
     #region Variables
-    protected string enemyName;
-    protected int level;
+    [Header("References") ]
     protected Life enemyLife;
     protected Rigidbody rb;
-    protected int expValue; //Experience points given to the player once the enemy is destroyed
 
-    protected float attackCooldownTimer;
+    [Header("Enemy Info")]
+    protected string enemyName;
+    protected int expValue; //Experience points given to the player once the enemy is destroyed
+    protected int level;
+
+    [Header("Attack")]
+    [SerializeField] protected float attackCooldownTimer;
     [SerializeField] protected float attackRange;
     protected bool playerInAttackRange;
+    protected bool canAttack;
     protected float actionTimer;
     #endregion
 
@@ -37,7 +42,7 @@ public abstract class Enemy : MonoBehaviour
     {
         if (!enemyLife.IsDead())
         {
-            if (!playerInAttackRange)
+            if (!playerInAttackRange || !canAttack)
             {
                 Patrol();
             }
@@ -58,8 +63,8 @@ public abstract class Enemy : MonoBehaviour
         {
             Debug.Log("Collided");
             //Get projectile damage
-            int damage = -105; //Testing value
-            enemyLife.UpdateLife(damage);
+            int damage = 105; //Testing value
+            enemyLife.TakeDamage(damage);
             if (enemyLife.IsDead()) {
                 Debug.Log("Enemy died");
                 ManageDeath();

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface IProjectile
 {
-    GameObject ProjectileSpawnPosition { get; }
+    Transform ProjectileSpawnPosition { get; }
     GameObject BulletPrefab { get; }
     void Shoot() { }
 }

@@ -5,37 +5,40 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(PlayerInput),typeof(CharacterController))]
 public class PlayerController : MonoBehaviour, IProjectile
 {
+
+    #region Variables
     public enum PlayerState {
         OnField,
         OnBattle,
         Death
     }
 
+    private PlayerState _state;
+
+    [Header("References")]
+    private PlayerInput playerInput;
+    private CharacterController _characterController;
     [SerializeField]
-    private float playerSpeed = 2.0f;
+    private Transform cameraTransform;
+    public Transform ProjectileSpawnPosition => throw new System.NotImplementedException();
+    public GameObject BulletPrefab => throw new System.NotImplementedException();
+
+    [Header("Movement")]
+    [SerializeField]
+    private float playerSpeed = 5.0f;
     [SerializeField]
     private float jumpHeight = 1.0f;
     [SerializeField]
     private float gravityValue = -9.81f;
     [SerializeField]
     private float softRotation = 0.5f;
-
-    [SerializeField]
-    private Transform cameraTransform;
-    
-    private CharacterController _characterController;
     private Vector3 playerVelocity;
     private bool groundedPlayer;
    
-    private PlayerState _state;
-
-    private PlayerInput playerInput;
+    [Header("Inputs")]
     private InputAction moveAction;
     private InputAction jumpAction;
-
-    public GameObject ProjectileSpawnPosition => throw new System.NotImplementedException();
-
-    public GameObject BulletPrefab => throw new System.NotImplementedException();
+    #endregion
 
     private void Awake()
     {
@@ -86,7 +89,7 @@ public class PlayerController : MonoBehaviour, IProjectile
         }
 
         playerVelocity.y += gravityValue * Time.deltaTime;
-        _characterController.Move((move + playerVelocity) * Time.deltaTime);
+        _characterController.Move((move + playerVelocity)* playerSpeed * Time.deltaTime);
 
        
         //Rotate towards camera
