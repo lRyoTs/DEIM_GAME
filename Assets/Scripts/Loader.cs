@@ -14,7 +14,9 @@ public class Loader : MonoBehaviour
     // Lista de nuestras escenas
     public enum Scene
     {
-        LoadingScene
+        LoadingScene,
+        BattleScene,
+        Zone01
     }
 
     private static Scene sceneAux;
