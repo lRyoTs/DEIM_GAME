@@ -6,11 +6,12 @@ using UnityEngine;
 public class PlayerAimController : MonoBehaviour
 {
     [SerializeField] private CinemachineVirtualCamera aimVirtualCamera;
-    [SerializeField] private LayerMask aimColliderLayerMask; 
+    [SerializeField] private LayerMask aimColliderLayerMask;
+    [SerializeField] private Transform aimTransform;
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -18,8 +19,9 @@ public class PlayerAimController : MonoBehaviour
     {
         Vector3 mouseWorldPosition = Vector3.zero;
         Vector2 screenCenterPoint = new Vector2(Screen.width / 2f, Screen.height / 2f); // Get center of the screen
-        Ray ray =  Camera.main.ScreenPointToRay(screenCenterPoint);
+        Ray ray = Camera.main.ScreenPointToRay(screenCenterPoint);
         if (Physics.Raycast(ray, out RaycastHit raycastHit, 999f, aimColliderLayerMask)) {
+            aimTransform.position = raycastHit.point;
             mouseWorldPosition = raycastHit.point;
         }
 
@@ -29,4 +31,10 @@ public class PlayerAimController : MonoBehaviour
 
         transform.forward = Vector3.Lerp(transform.forward, aimDirection, Time.deltaTime * 20f);
     }
+
+    /*
+    private Vector3 GetMouseWorldPosition() {
+        Vector3 vec = Get
+    }
+    */
 }

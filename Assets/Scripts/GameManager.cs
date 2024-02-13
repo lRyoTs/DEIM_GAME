@@ -2,11 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BattleManager : MonoBehaviour
+public class GameManager : MonoBehaviour
 {
-    enum BattleState {
-       InBattle,Win,Lose,NextWave
-    }
     // Start is called before the first frame update
     void Start()
     {
@@ -17,9 +14,5 @@ public class BattleManager : MonoBehaviour
     void Update()
     {
         
-    }
-
-    public void SetupBattle() {
-    
     }
 }

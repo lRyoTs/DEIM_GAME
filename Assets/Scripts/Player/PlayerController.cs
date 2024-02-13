@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour, IProjectile
         Death
     }
 
-    private PlayerState _state;
+    private PlayerState _playerState;
 
     [Header("References")]
     private PlayerInput playerInput;
@@ -42,7 +42,7 @@ public class PlayerController : MonoBehaviour, IProjectile
 
     private void Awake()
     {
-        _state = PlayerState.OnField;
+        _playerState = PlayerState.OnField;
         _characterController = GetComponent<CharacterController>();
         playerInput = GetComponent<PlayerInput>();
         moveAction = playerInput.actions["Move"];
@@ -52,7 +52,7 @@ public class PlayerController : MonoBehaviour, IProjectile
 
     void Update()
     {
-        switch (_state) {
+        switch (_playerState) {
             case PlayerState.OnField:
                 HandleMovement();
                 break;
@@ -108,11 +108,15 @@ public class PlayerController : MonoBehaviour, IProjectile
         throw new System.NotImplementedException();
     }
 
+    private void Look() {
+        //Vector2 targetMouseDelta = playerInput.actions["Look"].ReadValue()*Time.smoothDeltaTime;
+    }
+
    private void OnCollisionEnter(Collision collision)
    {
         if (collision.gameObject.CompareTag("Enemy")) {
             playerInput.SwitchCurrentActionMap("PlayerOnBattle");
-            _state = PlayerState.OnBattle;
+            _playerState = PlayerState.OnBattle;
         }
           
    }
