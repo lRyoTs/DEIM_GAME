@@ -17,8 +17,10 @@ public class PlayerController : MonoBehaviour, IProjectile
     private PlayerState _playerState;
 
     [Header("References")]
-    private PlayerInput playerInput;
+    private PlayerInput _playerInput;
     private CharacterController _characterController;
+    private PlayerControls _input;
+
     [SerializeField]
     private Transform cameraTransform;
     public Transform ProjectileSpawnPosition => throw new System.NotImplementedException();
@@ -33,14 +35,9 @@ public class PlayerController : MonoBehaviour, IProjectile
     private float gravityValue = -9.81f;
     [SerializeField]
     private float softRotation = 0.5f;
-    private Vector3 playerVelocity;
+    private Vector3 verticalVelocity;
     private bool groundedPlayer;
    
-    [Header("Inputs")]
-    private InputAction moveAction;
-    private InputAction jumpAction;
-    private InputAction lookAction;
-
     [Header("Cinemachine")]
     [Tooltip("The follow target set in the Cinemachine Virtual Camera that the camera will follow")]
     public GameObject CinemachineCameraTarget;
@@ -68,10 +65,8 @@ public class PlayerController : MonoBehaviour, IProjectile
     {
         _playerState = PlayerState.OnField;
         _characterController = GetComponent<CharacterController>();
-        playerInput = GetComponent<PlayerInput>();
-        moveAction = playerInput.actions["Move"];
-        jumpAction = playerInput.actions["Jump"];
-        lookAction = playerInput.actions["Look"];
+        _playerInput = GetComponent<PlayerInput>();
+        _input = GetComponent<PlayerControls>();
     }
 
 
@@ -79,9 +74,11 @@ public class PlayerController : MonoBehaviour, IProjectile
     {
         switch (_playerState) {
             case PlayerState.OnField:
+                Jump();
                 HandleMovement();
                 break;
             case PlayerState.OnBattle:
+                Jump();
                 Shoot();
                 Dodge();
                 break;
@@ -105,33 +102,14 @@ public class PlayerController : MonoBehaviour, IProjectile
         }
     }
 
-
     private void HandleMovement() {
 
-        float targetSpeed = moveAction.ReadValue<Vector2>() != Vector2.zero ? playerSpeed : 0 ;
+        float targetSpeed = _input.Move != Vector2.zero ? playerSpeed : 0 ;
 
-        groundedPlayer = _characterController.isGrounded;
-        if (groundedPlayer && playerVelocity.y < 0)
-        {
-            playerVelocity.y = 0f;
-        }
-
-        // Move by InputAction and looking and the camera direction
-        Vector2 input = moveAction.ReadValue<Vector2>();
-        Vector3 move = new Vector3(input.x, 0, input.y);
+        Vector3 move = new Vector3(_input.Move.x, 0, _input.Move.y);
         
         move = move.x * cameraTransform.right.normalized + move.z * cameraTransform.forward.normalized;
-        move.y = 0f;
-        //_characterController.Move(move * Time.deltaTime * playerSpeed);
 
-        // Changes the height position of the player..
-        if (jumpAction.triggered && groundedPlayer)
-        {
-            playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
-        }
-
-        playerVelocity.y += gravityValue * Time.deltaTime;
-       
         //Rotate towards camera
         float targetAngle = Mathf.Atan2(move.x,move.z) * Mathf.Rad2Deg + cameraTransform.eulerAngles.y;
         Quaternion rotation = Quaternion.Euler(0,targetAngle, 0);
@@ -139,9 +117,31 @@ public class PlayerController : MonoBehaviour, IProjectile
 
         Vector3 targetDirection = Quaternion.Euler(0.0f, targetAngle, 0.0f) * Vector3.forward;
         //Move player
-        _characterController.Move((targetDirection.normalized * targetSpeed * Time.deltaTime) + playerVelocity);
+        _characterController.Move((targetDirection.normalized * targetSpeed * Time.deltaTime) + verticalVelocity * Time.deltaTime);
     }
 
+    private void Jump() {
+        groundedPlayer = _characterController.isGrounded;
+        Debug.Log(groundedPlayer);
+        if (groundedPlayer)
+        {
+            //Stop velocity for dropping infinitely when grounded 
+            if (verticalVelocity.y < 0.0f)
+            {
+                verticalVelocity.y = -2f;
+            }
+
+            //Jump
+            if (_input.Jump)
+            {
+                Debug.Log("Saltar");
+                verticalVelocity.y = Mathf.Sqrt(jumpHeight * -2 * gravityValue); //velocity to reach desired height
+            }
+        }
+        else {
+            _input.Jump = false;
+        }
+    }
 
     private void Dodge()
     {
@@ -154,13 +154,13 @@ public class PlayerController : MonoBehaviour, IProjectile
 
     private void Look() {
         // if there is an input and camera position is not fixed
-        if (lookAction.ReadValue<Vector2>().sqrMagnitude >= _threshold && !LockCameraPosition)
+        if (_input.Look.sqrMagnitude >= _threshold && !LockCameraPosition)
         {
             //Don't multiply mouse input by Time.deltaTime;
-            float deltaTimeMultiplier = /*IsCurrentDeviceMouse ? 1.0f :*/ Time.deltaTime;
+            float deltaTimeMultiplier = Time.deltaTime;
 
-            _cinemachineTargetYaw += lookAction.ReadValue<Vector2>().x * deltaTimeMultiplier;
-            _cinemachineTargetPitch += lookAction.ReadValue<Vector2>().y * deltaTimeMultiplier;
+            _cinemachineTargetYaw += _input.Look.x * deltaTimeMultiplier;
+            _cinemachineTargetPitch += _input.Look.y * deltaTimeMultiplier;
         }
 
         // clamp our rotations so our values are limited 360 degrees
@@ -182,8 +182,9 @@ public class PlayerController : MonoBehaviour, IProjectile
 
     private void OnCollisionEnter(Collision collision)
    {
+        //Enter in combat
         if (collision.gameObject.CompareTag("Enemy")) {
-            playerInput.SwitchCurrentActionMap("PlayerOnBattle");
+            _playerInput.SwitchCurrentActionMap("PlayerOnBattle");
             _playerState = PlayerState.OnBattle;
         }
           

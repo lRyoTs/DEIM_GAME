@@ -609,7 +609,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.42, y: 1.25, z: -0.01}
   m_LocalScale: {x: 0.21334, y: 0.21334, z: 0.21334}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 892613640}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1033,6 +1033,7 @@ GameObject:
   - component: {fileID: 892613642}
   - component: {fileID: 892613641}
   - component: {fileID: 892613644}
+  - component: {fileID: 892613645}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1134,7 +1135,7 @@ MonoBehaviour:
   m_ActionEvents: []
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
-  m_DefaultActionMap: PlayerOnField
+  m_DefaultActionMap: 796f7304-1fc4-4b41-8492-b0fa456497bb
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
 --- !u!114 &892613644
@@ -1154,6 +1155,25 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   aimTransform: {fileID: 0}
+--- !u!114 &892613645
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 892613638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35773e630f98cd544a073a4ec9162443, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  move: {x: 0, y: 0}
+  look: {x: 0, y: 0}
+  jump: 0
+  interact: 0
+  shoot: 0
+  cursorLocked: 1
+  cursorInputForLook: 1
 --- !u!1 &1248531464
 GameObject:
   m_ObjectHideFlags: 0
