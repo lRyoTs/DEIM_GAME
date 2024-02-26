@@ -18,6 +18,10 @@ public class WorldEnemy : MonoBehaviour
     [SerializeField] private float visionRange;
     private bool inVisionRange = false; //Check if the player is in Vision range
 
+    [Header("Battle Enemy Info")]
+    [SerializeField] private List<GameObject> enemyList = new List<GameObject>();
+
+
     private void Awake()
     {
         m_Agent = GetComponent<NavMeshAgent>();
@@ -48,4 +52,16 @@ public class WorldEnemy : MonoBehaviour
     private void Follow() {
         m_Agent.destination = player.transform.position;
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player")) {
+            //Store
+
+            gameObject.SetActive(false);
+            //Instantiate Battle Scene
+        }
+    }
+
+
 }

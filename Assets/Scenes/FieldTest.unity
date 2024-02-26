@@ -675,6 +675,9 @@ GameObject:
   - component: {fileID: 786399211}
   - component: {fileID: 786399210}
   - component: {fileID: 786399209}
+  - component: {fileID: 786399215}
+  - component: {fileID: 786399214}
+  - component: {fileID: 786399213}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -768,6 +771,60 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &786399213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 786399208}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7dd25c16212a37b41bd7afec2d142b32, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackCooldownTimer: 0
+  attackRange: 0
+--- !u!114 &786399214
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 786399208}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa89632740a938242a17afad9bc80980, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseHealth: 10
+--- !u!54 &786399215
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 786399208}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -1135,7 +1192,7 @@ MonoBehaviour:
   m_ActionEvents: []
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
-  m_DefaultActionMap: 796f7304-1fc4-4b41-8492-b0fa456497bb
+  m_DefaultActionMap: PlayerOnField
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
 --- !u!114 &892613644
@@ -1167,11 +1224,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35773e630f98cd544a073a4ec9162443, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  move: {x: 0, y: 0}
-  look: {x: 0, y: 0}
-  jump: 0
-  interact: 0
-  shoot: 0
   cursorLocked: 1
   cursorInputForLook: 1
 --- !u!1 &1248531464
