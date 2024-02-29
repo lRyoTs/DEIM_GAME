@@ -14,7 +14,11 @@ public class WorldEnemy : MonoBehaviour
     [SerializeField] private GameObject player;
 
     [Header("World Atrributes")]
+    private Vector3 startPosition;
+    [SerializeField] int roamRadius;
+    private bool isMoving = false;
     [SerializeField] private float enemySpeed;
+    [SerializeField] private LayerMask playerLayerMask;
     [SerializeField] private float visionRange;
     private bool inVisionRange = false; //Check if the player is in Vision range
 
@@ -25,17 +29,19 @@ public class WorldEnemy : MonoBehaviour
     private void Awake()
     {
         m_Agent = GetComponent<NavMeshAgent>();
+        startPosition = transform.position;
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        player = GameObject.FindWithTag("Player");
     }
 
     // Update is called once per frame
     void Update()
     {
+        inVisionRange = Physics.CheckSphere(transform.position,visionRange,playerLayerMask);
         if (!inVisionRange)
         {
             Patrol();
@@ -45,12 +51,19 @@ public class WorldEnemy : MonoBehaviour
         }
     }
 
+
     private void Patrol() {
+
+        if (!isMoving)
+        {
+            Debug.Log("Moving");
+            FreeRoam(); 
+        }
         
     }
 
     private void Follow() {
-        m_Agent.destination = player.transform.position;
+        m_Agent.SetDestination(player.transform.position);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -62,6 +75,24 @@ public class WorldEnemy : MonoBehaviour
             //Instantiate Battle Scene
         }
     }
+    private void FreeRoam()
+    {
+        Vector3 randomDirection = Random.insideUnitSphere * roamRadius;
+        randomDirection += startPosition;
+        NavMeshHit hit;
+        NavMesh.SamplePosition(randomDirection, out hit, roamRadius, 1);
+        Vector3 finalPosition = hit.position;
+        if (m_Agent.SetDestination(finalPosition))
+        {
+            m_Agent.SetDestination(startPosition);
+        }
+    }
 
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(startPosition, roamRadius);
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, visionRange);
+    }
 
 }

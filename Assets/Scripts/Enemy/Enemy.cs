@@ -74,4 +74,8 @@ public abstract class Enemy : MonoBehaviour
 
     protected abstract void Patrol();
     protected abstract void Attack();
+
+    public int GetExpValue() {
+        return expValue;
+    }
 }

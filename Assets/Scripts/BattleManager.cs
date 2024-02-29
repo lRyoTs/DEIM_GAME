@@ -40,6 +40,7 @@ public class BattleManager : MonoBehaviour
     void Start()
     {
         InitializedPlayer();
+        
     }
 
     // Update is called once per frame
@@ -108,6 +109,24 @@ public class BattleManager : MonoBehaviour
         enemyList.Clear();
         foreach (GameObject enemy in enemyList) {
             enemyList.Add(enemy);
-        }  
+        }
+        CalculateBattleExp();
+    }
+
+    private void CalculateBattleExp() {
+        battleExp = 0;
+        Enemy enemyInfo;
+        foreach (GameObject enemy in enemyList) {
+            if (enemy.TryGetComponent<Enemy>(out enemyInfo)) {
+                battleExp += enemyInfo.GetExpValue();
+                Debug.Log(battleExp);
+            }
+            enemy.GetComponent<Enemy>().GetExpValue();
+        }
+    }
+
+    public int GetBattleExp()
+    {
+        return battleExp;
     }
 }
