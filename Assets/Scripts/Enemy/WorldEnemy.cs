@@ -16,7 +16,6 @@ public class WorldEnemy : MonoBehaviour
     [Header("World Atrributes")]
     private Vector3 startPosition;
     [SerializeField] int roamRadius;
-    private bool isMoving = false;
     [SerializeField] private float enemySpeed;
     [SerializeField] private LayerMask playerLayerMask;
     [SerializeField] private float visionRange;
@@ -53,11 +52,10 @@ public class WorldEnemy : MonoBehaviour
 
 
     private void Patrol() {
-
-        if (!isMoving)
+        
+        if (!m_Agent.pathPending && !m_Agent.hasPath) //If agent doesnt have a destination provided
         {
-            Debug.Log("Moving");
-            FreeRoam(); 
+            FreeRoam(); //Get new destination
         }
         
     }
@@ -70,22 +68,31 @@ public class WorldEnemy : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player")) {
             //Store
+            BattleHandler.PlayerWorldPosition = collision.gameObject.transform.position;
+            BattleHandler.SetEnemyList(enemyList);
 
             gameObject.SetActive(false);
             //Instantiate Battle Scene
         }
     }
+
     private void FreeRoam()
     {
+        //Get a random position near enemy startPosition
         Vector3 randomDirection = Random.insideUnitSphere * roamRadius;
         randomDirection += startPosition;
+
+        //Get new destination in Navmesh area
         NavMeshHit hit;
         NavMesh.SamplePosition(randomDirection, out hit, roamRadius, 1);
         Vector3 finalPosition = hit.position;
-        if (m_Agent.SetDestination(finalPosition))
+
+        //Check if the path is posible
+        if (!m_Agent.SetDestination(finalPosition))
         {
-            m_Agent.SetDestination(startPosition);
+            m_Agent.SetDestination(startPosition); //If not, return to initial position
         }
+
     }
 
     private void OnDrawGizmos()

@@ -40,7 +40,6 @@ public class BattleManager : MonoBehaviour
     void Start()
     {
         InitializedPlayer();
-        
     }
 
     // Update is called once per frame
@@ -121,7 +120,6 @@ public class BattleManager : MonoBehaviour
                 battleExp += enemyInfo.GetExpValue();
                 Debug.Log(battleExp);
             }
-            enemy.GetComponent<Enemy>().GetExpValue();
         }
     }
 

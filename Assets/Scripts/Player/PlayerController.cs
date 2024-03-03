@@ -134,12 +134,16 @@ public class PlayerController : MonoBehaviour, IProjectile
             //Jump
             if (_input.Jump)
             {
-                Debug.Log("Saltar");
                 verticalVelocity.y = Mathf.Sqrt(jumpHeight * -2 * gravityValue); //velocity to reach desired height
             }
         }
         else {
             _input.Jump = false;
+        }
+
+        if (verticalVelocity.y < 53)
+        {
+            verticalVelocity.y += gravityValue * Time.deltaTime;
         }
     }
 
