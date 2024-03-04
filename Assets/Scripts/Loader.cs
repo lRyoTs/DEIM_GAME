@@ -11,6 +11,7 @@ public class Loader : MonoBehaviour
     //Scene List
     public enum Scene
     {
+        MainMenu,
         LoadingScene,
         BattleScene,
         Zone01
@@ -38,5 +39,9 @@ public class Loader : MonoBehaviour
             loaderCallbackAction();
             loaderCallbackAction = null;
         }
+    }
+
+    public static string GetCurrentScene() {
+        return SceneManager.GetActiveScene().name;
     }
 }

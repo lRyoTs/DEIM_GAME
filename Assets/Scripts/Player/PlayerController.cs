@@ -26,6 +26,7 @@ public class PlayerController : MonoBehaviour, IProjectile
     public GameObject BulletPrefab => throw new System.NotImplementedException();
 
     [Header("Movement")]
+    private Vector3 startPosition;
     [SerializeField]
     private float playerSpeed = 5.0f;
     [SerializeField]
@@ -66,8 +67,16 @@ public class PlayerController : MonoBehaviour, IProjectile
         _characterController = GetComponent<CharacterController>();
         _playerInput = GetComponent<PlayerInput>();
         _input = GetComponent<PlayerControls>();
+
+        EventManager.AddHandler(EventManager.EVENT.OnPause, UnlockCursor);
+        EventManager.AddHandler(EventManager.EVENT.OnResume, LockCursor);
     }
 
+    private void OnDisable()
+    {
+        EventManager.RemoveHandler(EventManager.EVENT.OnPause, UnlockCursor);
+        EventManager.RemoveHandler(EventManager.EVENT.OnResume, LockCursor);
+    }
 
     void Update()
     {
@@ -184,12 +193,19 @@ public class PlayerController : MonoBehaviour, IProjectile
     }
 
     private void OnCollisionEnter(Collision collision)
-   {
+    {
         //Enter in combat
         if (collision.gameObject.CompareTag("Enemy")) {
             _playerInput.SwitchCurrentActionMap("PlayerOnBattle");
             _playerState = PlayerState.OnBattle;
         }
-          
-   }
+    }
+
+    public void LockCursor() {
+        Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    public void UnlockCursor() {
+        Cursor.lockState = CursorLockMode.None;
+    }
 }

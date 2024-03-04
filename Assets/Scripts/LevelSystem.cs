@@ -24,12 +24,19 @@ public class LevelSystem : MonoBehaviour
     public int divisionMultiplier = 7;
     #endregion
 
+    private void Awake()
+    {
+        //Get information if there is PlayerPrefs
+        Level = PlayerPrefs.GetInt(DataPersistence.PLAYER_LEVEL, 1);
+        currentXp = PlayerPrefs.GetInt(DataPersistence.PLAYER_CURRENT_EXP, 0);
+    }
+
     // Start is called before the first frame update
     void Start()
-    {
+    {   
+        requiredXp = CalculateRequiredXp();
         frontXpbar.fillAmount = currentXp / requiredXp;
         backXpBar.fillAmount = currentXp / requiredXp;
-        requiredXp = CalculateRequiredXp();
     }
 
     // Update is called once per frame
@@ -69,6 +76,7 @@ public class LevelSystem : MonoBehaviour
         backXpBar.fillAmount = 0;
         currentXp = Mathf.RoundToInt(currentXp - requiredXp);
         requiredXp = CalculateRequiredXp();
+        EventManager.Broadcast(EventManager.EVENT.OnLevelUp);
     }
 
     private int CalculateRequiredXp() {

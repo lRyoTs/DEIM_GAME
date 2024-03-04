@@ -8,9 +8,11 @@ public class EventManager : MonoBehaviour
     public enum EVENT
     {
         OnPause,
+        OnResume,
         OnHit,
         OnShoot,
         OnDodge,
+        OnLevelUp
     }
 
     private static Dictionary<EVENT, Action> eventTable = new Dictionary<EVENT, Action>(); //Stores the delegate that get called when an event id fired

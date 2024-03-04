@@ -69,9 +69,10 @@ public class WorldEnemy : MonoBehaviour
             //Store
             BattleHandler.PlayerWorldPosition = collision.gameObject.transform.position;
             BattleHandler.SetEnemyList(enemyList);
-
+            BattleHandler.previousScene = Loader.GetCurrentScene();
             gameObject.SetActive(false);
             //Instantiate Battle Scene
+            Loader.Load(Loader.Scene.BattleScene);
         }
     }
 
