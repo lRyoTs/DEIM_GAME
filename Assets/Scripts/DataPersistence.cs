@@ -46,4 +46,20 @@ public class DataPersistence : MonoBehaviour
         PlayerPrefs.DeleteAll();
     }
 
+    public void GetPlayersPrefsPlayerPosition() {
+        PlayerWorldPosition = new Vector3(PlayerPrefs.GetFloat(PLAYER_POS_X, 0), PlayerPrefs.GetFloat(PLAYER_POS_X, 0), PlayerPrefs.GetFloat(PLAYER_POS_X, 0));
+    }
+
+    public void GetPlayerPrefsLevel()
+    {
+        PlayerCurrentLevel = PlayerPrefs.GetInt(PLAYER_LEVEL, 1);
+    }
+
+    public void GetPlayerPrefsExp() {
+        PlayerCurrentExp = PlayerPrefs.GetInt(PLAYER_CURRENT_EXP, 0);
+    }
+
+    public void GetPlayerPrefsCurrentScene() {
+        CurrentScene = PlayerPrefs.GetInt(CURRENT_SCENE, 2);
+    }
 }

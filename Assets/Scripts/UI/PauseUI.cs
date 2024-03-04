@@ -9,7 +9,6 @@ public class PauseUI : MonoBehaviour
 
     [SerializeField] private Button resumeButton;
     [SerializeField] private Button mainMenuButton;
-    [SerializeField] private Button settingsButton;
 
     private void Awake()
     {

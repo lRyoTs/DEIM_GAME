@@ -15,6 +15,11 @@ public class GameManager : MonoBehaviour
             Debug.Log("There is more than 1 Instance of GameManager");
         }
         Instance = this;
+        
+        if(DataPersistence.Instance.PlayerWorldPosition != Vector3.zero)
+        {
+            spawnPosition.transform.position = DataPersistence.Instance.PlayerWorldPosition;
+        }
     }
     // Start is called before the first frame update
     void Start()
@@ -25,7 +30,18 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (!isPaused)
+            {
+                PauseGame();
+            }
+            else
+            {
+                ResumeGame();
+            }
+            
+        }
     }
 
     public void PauseGame() {
@@ -40,5 +56,10 @@ public class GameManager : MonoBehaviour
         PauseUI.instance.Hide();
         isPaused = false;
         EventManager.Broadcast(EventManager.EVENT.OnResume);
+    }
+
+    private void StartGame()
+    {
+        SoundManager.CreateSoundManagerGameobject();
     }
 }
