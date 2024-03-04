@@ -19,7 +19,8 @@ public class DataPersistence : MonoBehaviour
     public Vector3 PlayerWorldPosition { get; set; } //Store Player world position
     public int PlayerCurrentLevel { get; set; }
     public int PlayerCurrentExp { get; set; }
-    public int CurrentScene { get; set; }
+    public string CurrentScene { get; set; }
+
 
     private void Awake()
     {
@@ -31,12 +32,20 @@ public class DataPersistence : MonoBehaviour
         else {
             Destroy(this);
         }
+
+        if (PlayerPrefs.HasKey(PLAYER_LEVEL))
+        {
+            GetPlayerPrefsCurrentScene();
+            GetPlayerPrefsLevel();
+            GetPlayerPrefsExp();
+            GetPlayersPrefsPlayerPosition();
+        }
     }
 
     public void SaveInPlayerPrefs() {
         PlayerPrefs.SetInt(PLAYER_CURRENT_EXP,PlayerCurrentExp);
         PlayerPrefs.SetInt(PLAYER_LEVEL, PlayerCurrentLevel);
-        PlayerPrefs.SetInt(CURRENT_SCENE, CurrentScene);
+        PlayerPrefs.SetString(CURRENT_SCENE, CurrentScene);
         PlayerPrefs.SetFloat(PLAYER_POS_X, PlayerWorldPosition.x);
         PlayerPrefs.SetFloat(PLAYER_POS_Y, PlayerWorldPosition.y);
         PlayerPrefs.SetFloat(PLAYER_POS_Z, PlayerWorldPosition.z);
@@ -60,6 +69,14 @@ public class DataPersistence : MonoBehaviour
     }
 
     public void GetPlayerPrefsCurrentScene() {
-        CurrentScene = PlayerPrefs.GetInt(CURRENT_SCENE, 2);
+        CurrentScene = PlayerPrefs.GetString(CURRENT_SCENE, "Zone1");
+    }
+
+    public void GetInfoFromPlayerPrefs()
+    {
+        GetPlayerPrefsExp();
+        GetPlayerPrefsLevel();
+        GetPlayersPrefsPlayerPosition();
+        GetPlayerPrefsCurrentScene();
     }
 }

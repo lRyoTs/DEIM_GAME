@@ -15,7 +15,8 @@ public class PlayerLife : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
+    {   
+        health = Mathf.Clamp(health, 0, maxHealth);
         UpdateHealthUI();
     }
 
@@ -34,7 +35,7 @@ public class PlayerLife : MonoBehaviour
 
     private void UpdateHealthUI()
     {
-        health = Mathf.Clamp(health, 0, maxHealth);
+        
         float fillF = frontHealthBar.fillAmount;
         float fillB = backHealthBar.fillAmount;
         float hFraction = health / maxHealth;
@@ -64,5 +65,10 @@ public class PlayerLife : MonoBehaviour
     public void RestoreHealth(float healAmount) {
         health += healAmount;
         lerpTimer = 0;
+    }
+
+    public void RestoreToMaxHealth()
+    {
+        health = maxHealth;
     }
 }

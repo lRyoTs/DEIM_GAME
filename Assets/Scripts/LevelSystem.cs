@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,6 +18,7 @@ public class LevelSystem : MonoBehaviour
     [Header("UI")]
     [SerializeField] private Image frontXpbar;
     [SerializeField] private Image backXpBar;
+    [SerializeField] private TextMeshProUGUI levelText;
 
     [Header("Level Multipliers")]
     public int additionMultiplier = 200;
@@ -24,19 +26,16 @@ public class LevelSystem : MonoBehaviour
     public int divisionMultiplier = 7;
     #endregion
 
-    private void Awake()
-    {
-        //Get information if there is PlayerPrefs
-        Level = PlayerPrefs.GetInt(DataPersistence.PLAYER_LEVEL, 1);
-        currentXp = PlayerPrefs.GetInt(DataPersistence.PLAYER_CURRENT_EXP, 0);
-    }
 
     // Start is called before the first frame update
     void Start()
-    {   
+    {
+        Level = DataPersistence.Instance.PlayerCurrentLevel;
+        currentXp = DataPersistence.Instance.PlayerCurrentExp;
         requiredXp = CalculateRequiredXp();
         frontXpbar.fillAmount = currentXp / requiredXp;
         backXpBar.fillAmount = currentXp / requiredXp;
+        UpdateLevelText();
     }
 
     // Update is called once per frame
@@ -63,6 +62,11 @@ public class LevelSystem : MonoBehaviour
         }
     }
 
+    public void UpdateLevelText()
+    {
+        levelText.text = Level.ToString();
+    }
+
     public void GainExperienceFlatRate(float xpGained) {
         currentXp += xpGained; 
         //Reset Timers
@@ -71,12 +75,21 @@ public class LevelSystem : MonoBehaviour
     }
 
     public void LevelUp() {
-        Level++;
-        frontXpbar.fillAmount = 0;
-        backXpBar.fillAmount = 0;
-        currentXp = Mathf.RoundToInt(currentXp - requiredXp);
-        requiredXp = CalculateRequiredXp();
-        EventManager.Broadcast(EventManager.EVENT.OnLevelUp);
+        if(Level < MAX_LEVEL)
+        {
+            Level++;
+            frontXpbar.fillAmount = 0;
+            backXpBar.fillAmount = 0;
+            currentXp = Mathf.RoundToInt(currentXp - requiredXp);
+            requiredXp = CalculateRequiredXp();
+            UpdateLevelText();
+            EventManager.Broadcast(EventManager.EVENT.OnLevelUp);
+
+            //Store in DataPersistence
+            DataPersistence.Instance.PlayerCurrentLevel = Level;
+            DataPersistence.Instance.PlayerCurrentExp = (int)currentXp;
+        }
+       
     }
 
     private int CalculateRequiredXp() {

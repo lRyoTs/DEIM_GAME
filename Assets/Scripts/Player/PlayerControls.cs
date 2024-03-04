@@ -38,6 +38,11 @@ public class PlayerControls : MonoBehaviour
         JumpInput(value.isPressed);
     }
 
+    public void OnInteract(InputValue value) 
+    {
+        InteractInput(value.isPressed);   
+    }
+
     public void OnShoot(InputValue value) {
         ShootInput(value.isPressed);
     }
@@ -55,6 +60,11 @@ public class PlayerControls : MonoBehaviour
     public void JumpInput(bool newJumpState)
     {
         Jump = newJumpState;
+    }
+
+    public void InteractInput(bool newInteractsState)
+    {
+        Interact = newInteractsState;
     }
 
     public void ShootInput(bool newShootState) {

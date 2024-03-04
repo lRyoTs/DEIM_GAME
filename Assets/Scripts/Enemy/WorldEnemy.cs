@@ -20,6 +20,7 @@ public class WorldEnemy : MonoBehaviour
     [SerializeField] private LayerMask playerLayerMask;
     [SerializeField] private float visionRange;
     private bool inVisionRange = false; //Check if the player is in Vision range
+    [SerializeField] private int baseDamage = 15;
 
     [Header("Battle Enemy Info")]
     [SerializeField] private List<GameObject> enemyList = new List<GameObject>();
@@ -66,13 +67,8 @@ public class WorldEnemy : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Player")) {
-            //Store
-            BattleHandler.PlayerWorldPosition = collision.gameObject.transform.position;
-            BattleHandler.SetEnemyList(enemyList);
-            BattleHandler.previousScene = Loader.GetCurrentScene();
-            gameObject.SetActive(false);
-            //Instantiate Battle Scene
-            Loader.Load(Loader.Scene.BattleScene);
+            player.GetComponent<PlayerLife>().TakeDamage(baseDamage);
+            PostProcesingManager.instance.VignetteOn();
         }
     }
 

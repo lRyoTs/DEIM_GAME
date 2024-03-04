@@ -1,6 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.PlasticSCM.Editor.WebApi;
+
 using UnityEngine;
 
 public class PlayerStats : MonoBehaviour
@@ -22,8 +20,13 @@ public class PlayerStats : MonoBehaviour
     {
         _levelInfo = GetComponent<LevelSystem>();
         _playerLife = GetComponent<PlayerLife>();
-        CalculateStats();
+        
         EventManager.AddHandler(EventManager.EVENT.OnLevelUp,CalculateStats);
+    }
+
+    private void Start()
+    {
+        CalculateStats();
     }
 
     private void OnDisable()

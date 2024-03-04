@@ -21,6 +21,7 @@ public class PauseUI : MonoBehaviour
         mainMenuButton.onClick.AddListener(() => {
             SoundManager.PlaySound(SoundManager.Sound.Click);
             Time.timeScale = 1f;
+            SoundManager.PlaySong(SoundManager.Sound.Menu);
             Loader.Load(Loader.Scene.MainMenu);
         });
 

@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.Windows;
 
 [RequireComponent(typeof(PlayerInput),typeof(CharacterController))]
-public class PlayerController : MonoBehaviour, IProjectile
+public class PlayerController : MonoBehaviour
 {
     #region Variables
     public enum PlayerState {
@@ -19,11 +19,10 @@ public class PlayerController : MonoBehaviour, IProjectile
     private PlayerInput _playerInput;
     private CharacterController _characterController;
     private PlayerControls _input;
+    private Animator _animator;
 
     [SerializeField]
     private Transform cameraTransform;
-    public Transform ProjectileSpawnPosition => throw new System.NotImplementedException();
-    public GameObject BulletPrefab => throw new System.NotImplementedException();
 
     [Header("Movement")]
     private Vector3 startPosition;
@@ -37,6 +36,7 @@ public class PlayerController : MonoBehaviour, IProjectile
     private float softRotation = 0.5f;
     private Vector3 verticalVelocity;
     private bool groundedPlayer;
+    private bool isWalking;
    
     [Header("Cinemachine")]
     [Tooltip("The follow target set in the Cinemachine Virtual Camera that the camera will follow")]
@@ -67,6 +67,7 @@ public class PlayerController : MonoBehaviour, IProjectile
         _characterController = GetComponent<CharacterController>();
         _playerInput = GetComponent<PlayerInput>();
         _input = GetComponent<PlayerControls>();
+        _animator = GetComponent<Animator>();
 
         EventManager.AddHandler(EventManager.EVENT.OnPause, UnlockCursor);
         EventManager.AddHandler(EventManager.EVENT.OnResume, LockCursor);
@@ -87,8 +88,6 @@ public class PlayerController : MonoBehaviour, IProjectile
                 break;
             case PlayerState.OnBattle:
                 Jump();
-                Shoot();
-                Dodge();
                 break;
             case PlayerState.Death:
                 break;
@@ -108,6 +107,8 @@ public class PlayerController : MonoBehaviour, IProjectile
             case PlayerState.Death:
                 break;
         }
+
+        _animator.SetBool("Walk",isWalking);
     }
 
     private void HandleMovement() {
@@ -126,11 +127,13 @@ public class PlayerController : MonoBehaviour, IProjectile
         Vector3 targetDirection = Quaternion.Euler(0.0f, targetAngle, 0.0f) * Vector3.forward;
         //Move player
         _characterController.Move((targetDirection.normalized * targetSpeed * Time.deltaTime) + verticalVelocity * Time.deltaTime);
+
+        isWalking = targetSpeed > 0 ? true : false;
+        
     }
 
     private void Jump() {
         groundedPlayer = _characterController.isGrounded;
-        Debug.Log(groundedPlayer);
         if (groundedPlayer)
         {
             //Stop velocity for dropping infinitely when grounded 
@@ -143,6 +146,7 @@ public class PlayerController : MonoBehaviour, IProjectile
             if (_input.Jump)
             {
                 verticalVelocity.y = Mathf.Sqrt(jumpHeight * -2 * gravityValue); //velocity to reach desired height
+                _animator.SetTrigger("Jump");
             }
         }
         else {
@@ -153,15 +157,6 @@ public class PlayerController : MonoBehaviour, IProjectile
         {
             verticalVelocity.y += gravityValue * Time.deltaTime;
         }
-    }
-
-    private void Dodge()
-    {
-        throw new NotImplementedException();
-    }
-
-    private void Shoot() {
-        throw new System.NotImplementedException();
     }
 
     private void Look() {

@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set;}
     [SerializeField] private GameObject spawnPosition;
+    [SerializeField] private GameObject player;
     private bool isPaused = false;
 
     private void Awake()
@@ -16,7 +18,7 @@ public class GameManager : MonoBehaviour
         }
         Instance = this;
         
-        if(DataPersistence.Instance.PlayerWorldPosition != Vector3.zero)
+        if(PlayerPrefs.HasKey(DataPersistence.PLAYER_POS_X)&&PlayerPrefs.HasKey(DataPersistence.PLAYER_POS_Y)&&PlayerPrefs.HasKey(DataPersistence.PLAYER_POS_Z))
         {
             spawnPosition.transform.position = DataPersistence.Instance.PlayerWorldPosition;
         }
@@ -24,7 +26,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        StartGame();
     }
 
     // Update is called once per frame
@@ -60,6 +62,10 @@ public class GameManager : MonoBehaviour
 
     private void StartGame()
     {
+        player.transform.position = spawnPosition.transform.position;
+        player.transform.rotation = spawnPosition.transform.rotation;
         SoundManager.CreateSoundManagerGameobject();
+        SoundManager.PlaySong(SoundManager.Sound.Exploration);
+        DataPersistence.Instance.CurrentScene = Loader.GetCurrentScene();
     }
 }

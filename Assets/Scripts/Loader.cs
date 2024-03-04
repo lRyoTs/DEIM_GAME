@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Loader : MonoBehaviour
+public static class Loader
 {
     private static Action loaderCallbackAction;
 
@@ -14,21 +14,28 @@ public class Loader : MonoBehaviour
         MainMenu,
         LoadingScene,
         BattleScene,
-        Zone01
+        Zone1
     }
 
     private static Scene sceneAux;
 
     public static void Load(Scene scene)
     {
-        // Asignas en loaderCallbackAction una función que no recibe parámetros y ejecuta la línea 25
         loaderCallbackAction = () =>
         {
             SceneManager.LoadScene(scene.ToString());
         };
 
+        SceneManager.LoadScene(Scene.LoadingScene.ToString());
+    }
 
-        // Llamamos a la escena de carga
+    public static void Load(string scene)
+    {
+        loaderCallbackAction = () =>
+        {
+            SceneManager.LoadScene(scene);
+        };
+
         SceneManager.LoadScene(Scene.LoadingScene.ToString());
     }
 
