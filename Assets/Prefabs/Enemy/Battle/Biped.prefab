@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6638191008973648012}
   - component: {fileID: 4278750139078834314}
   m_Layer: 0
-  m_Name: Biped_Battle
+  m_Name: Biped
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -60,8 +60,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7dd25c16212a37b41bd7afec2d142b32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackCooldownTimer: 0
-  attackRange: 0
+  base_Exp: 10
+  base_Dmg: 2
+  enemySpeed: 3
+  actionTimer: 2.5
+  attackCooldownTimer: 2.5
+  attackRange: 4
+  playerLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!54 &4278750139078834314
 Rigidbody:
   m_ObjectHideFlags: 0

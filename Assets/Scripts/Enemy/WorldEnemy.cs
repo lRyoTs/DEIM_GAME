@@ -50,7 +50,6 @@ public class WorldEnemy : MonoBehaviour
         }
     }
 
-
     private void Patrol() {
         
         if (!m_Agent.pathPending && !m_Agent.hasPath) //If agent doesnt have a destination provided
@@ -92,7 +91,6 @@ public class WorldEnemy : MonoBehaviour
         {
             m_Agent.SetDestination(startPosition); //If not, return to initial position
         }
-
     }
 
     private void OnDrawGizmos()

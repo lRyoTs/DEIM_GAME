@@ -6,7 +6,6 @@ using UnityEngine.Windows;
 [RequireComponent(typeof(PlayerInput),typeof(CharacterController))]
 public class PlayerController : MonoBehaviour, IProjectile
 {
-
     #region Variables
     public enum PlayerState {
         OnField,

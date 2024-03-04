@@ -881,8 +881,8 @@ MonoBehaviour:
     m_Bits: 64
   visionRange: 5
   enemyList:
-  - {fileID: 786399208}
-  - {fileID: 786399208}
+  - {fileID: 3918090269090248714, guid: 996b477cc33a3344f86fe1e1e835a098, type: 3}
+  - {fileID: 3918090269090248714, guid: 996b477cc33a3344f86fe1e1e835a098, type: 3}
 --- !u!195 &786399217
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1271,7 +1271,7 @@ MonoBehaviour:
       m_Calls: []
   m_ActionEvents: []
   m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
+  m_DefaultControlScheme: KeyboardMouse
   m_DefaultActionMap: PlayerOnField
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}

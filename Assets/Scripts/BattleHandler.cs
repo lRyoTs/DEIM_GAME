@@ -17,13 +17,15 @@ public static class BattleHandler
         foreach (GameObject enemy in enemyList)
         {
             if (enemy.TryGetComponent<Enemy>(out Enemy enemyInfo)) {
-                BattleHandler.enemyList.Add(enemy);
+                enemyInfo.InitializeEnemy(1);
                 BattleExp += enemyInfo.GetExpValue();
+                BattleHandler.enemyList.Add(enemy);
             }
             
         }
 
         Debug.Log($" Total EXP:{BattleExp}, List Count {BattleHandler.enemyList.Count}");
+        Debug.Log(BattleHandler.enemyList[0].GetComponent<Enemy>().GetExpValue());
     }
 
 }

@@ -12,20 +12,25 @@ public abstract class Enemy : MonoBehaviour
     protected Life enemyLife;
     protected Rigidbody rb;
 
+    [Header("Enemy Base Stats")]
+    [SerializeField] protected int base_Exp;
+    [SerializeField] protected int base_Dmg;
+
     [Header("Enemy Info")]
     protected string enemyName;
-    protected int expValue; //Experience points given to the player once the enemy is destroyed
-    protected int level;
+    protected int level = 1;
+    [SerializeField] protected float enemySpeed;
+    [SerializeField] protected float actionTimer;
 
     [Header("Attack")]
     [SerializeField] protected float attackCooldownTimer;
     [SerializeField] protected float attackRange;
+    [SerializeField] protected LayerMask playerLayerMask;
     protected bool playerInAttackRange;
     protected bool canAttack;
-    protected float actionTimer;
     #endregion
 
-    private void Start()
+    protected virtual void Start()
     {
         enemyLife = GetComponent<Life>(); //Setting enemy life requires level > 0
         rb = GetComponent<Rigidbody>();
@@ -37,11 +42,11 @@ public abstract class Enemy : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-
-    private void FixedUpdate()
+    protected void FixedUpdate()
     {
         if (!enemyLife.IsDead())
         {
+            playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, playerLayerMask);
             if (!playerInAttackRange || !canAttack)
             {
                 Patrol();
@@ -52,18 +57,17 @@ public abstract class Enemy : MonoBehaviour
         }
     }
 
-
     protected void OnDisable() {
-        //Store expvalue in a variable to call once the battle is done
-        Debug.Log("Store enemyvalue in dataPersistence");
+        
     }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Player"))//collision.gameObject.CompareTag("Projectile"))
         {
             Debug.Log("Collided");
             //Get projectile damage
-            int damage = 105; //Testing value
+            int damage = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerStats>().GetAttackDmg(); //Testing value
             enemyLife.TakeDamage(damage);
             if (enemyLife.IsDead()) {
                 Debug.Log("Enemy died");
@@ -75,7 +79,34 @@ public abstract class Enemy : MonoBehaviour
     protected abstract void Patrol();
     protected abstract void Attack();
 
-    public virtual int GetExpValue() {
-        return expValue;
+    public void InitializeEnemy(int baseLevel) {
+        name = gameObject.name;
+
+        if (baseLevel <= 3)
+        {
+            level = Random.Range(1, baseLevel+3);
+        }
+        else {
+            level = Random.Range(baseLevel-3,baseLevel+3); //Set to calculate randomly between player level  + 3 levels above;
+        }
+        
+    }
+
+    public int GetExpValue() {
+        return level*base_Exp;
+    }
+
+    public string GetEnemyName() {
+        return enemyName;
+    }
+    
+    public int GetLevel()
+    {
+        return level;
+    }
+
+    protected void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(transform.position,attackRange);
     }
 }

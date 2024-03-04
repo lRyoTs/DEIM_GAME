@@ -6,12 +6,9 @@ using UnityEngine.SceneManagement;
 
 public class Loader : MonoBehaviour
 {
-    // Variable que guarda una función sin inputs ni output
     private static Action loaderCallbackAction;
 
-    // Una clase static tiene todas sus variables y funciones también static
-
-    // Lista de nuestras escenas
+    //Scene List
     public enum Scene
     {
         LoadingScene,
@@ -42,12 +39,4 @@ public class Loader : MonoBehaviour
             loaderCallbackAction = null;
         }
     }
-
-
-    // () => { cuerpo función }
-    /*
-     * private void NombreAux(){
-     * cuerpo función
-     * }
-     */
 }
