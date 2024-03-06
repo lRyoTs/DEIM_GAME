@@ -10,8 +10,9 @@ using UnityEngine.AI;
 public class WorldEnemy : MonoBehaviour
 {
     [Header("References")]
-    private NavMeshAgent m_Agent;
+    private NavMeshAgent _navMeshAgent;
     [SerializeField] private GameObject player;
+    private Animator _animator;
 
     [Header("World Atrributes")]
     private Vector3 startPosition;
@@ -22,13 +23,20 @@ public class WorldEnemy : MonoBehaviour
     private bool inVisionRange = false; //Check if the player is in Vision range
     [SerializeField] private int baseDamage = 15;
 
-    [Header("Battle Enemy Info")]
-    [SerializeField] private List<GameObject> enemyList = new List<GameObject>();
+    [Header("Attack")]
+    [SerializeField] protected float attackCooldownTimer = 2f;
+    [SerializeField] protected float attackRange;
+    protected bool inAttackRange;
+    protected bool canAttack;
+
+    [Header("Animations")]
+    private bool isAttacking;
+    private bool isWalking;
 
 
     private void Awake()
     {
-        m_Agent = GetComponent<NavMeshAgent>();
+        _navMeshAgent = GetComponent<NavMeshAgent>();
         startPosition = transform.position;
     }
 
@@ -41,19 +49,37 @@ public class WorldEnemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        inAttackRange = Physics.CheckSphere(transform.position,attackRange,playerLayerMask);
         inVisionRange = Physics.CheckSphere(transform.position,visionRange,playerLayerMask);
-        if (!inVisionRange)
+        
+        if (!(inVisionRange || inAttackRange))
         {
             Patrol();
+
         }
-        else {
+        else if(inVisionRange){
             Follow();
         }
+        else
+        {
+            Attack();
+        }
+    }
+
+    private void LateUpdate()
+    {
+        /*
+        if (isAttacking)
+        {
+            _animator.SetTrigger("Attack");
+        }
+        _animator.SetBool("Walk", isWalking);
+        */
     }
 
     private void Patrol() {
         
-        if (!m_Agent.pathPending && !m_Agent.hasPath) //If agent doesnt have a destination provided
+        if (!_navMeshAgent.pathPending && !_navMeshAgent.hasPath) //If agent doesnt have a destination provided
         {
             FreeRoam(); //Get new destination
         }
@@ -61,7 +87,20 @@ public class WorldEnemy : MonoBehaviour
     }
 
     private void Follow() {
-        m_Agent.SetDestination(player.transform.position);
+        _navMeshAgent.SetDestination(player.transform.position);
+    }
+
+    private void Attack() {
+        if (canAttack)
+        {
+            StartCoroutine("AttackCooldown");
+            isAttacking = true;
+            
+        }
+        else
+        {
+            isAttacking = false;
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -84,10 +123,17 @@ public class WorldEnemy : MonoBehaviour
         Vector3 finalPosition = hit.position;
 
         //Check if the path is posible
-        if (!m_Agent.SetDestination(finalPosition))
+        if (!_navMeshAgent.SetDestination(finalPosition))
         {
-            m_Agent.SetDestination(startPosition); //If not, return to initial position
+            _navMeshAgent.SetDestination(startPosition); //If not, return to initial position
         }
+    }
+
+    private IEnumerator AttackCooldown() {
+
+        canAttack = false;
+        yield return new WaitForSeconds(attackCooldownTimer);
+        canAttack = true;
     }
 
     private void OnDrawGizmos()

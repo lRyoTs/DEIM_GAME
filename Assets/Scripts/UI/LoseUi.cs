@@ -1,18 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class LoseUi : MonoBehaviour
+public class LoseUI : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public static LoseUI Instance { get; private set; }
+    [SerializeField] private Button mainMenuButton;
 
-    // Update is called once per frame
-    void Update()
+    private void Awake()
     {
-        
+        if (Instance != null)
+        {
+            Debug.LogError("There is more than 1 instance of WinUI");
+        }
+        Instance = this;
+
+        mainMenuButton.onClick.AddListener(() =>
+        {
+            SoundManager.PlaySound(SoundManager.Sound.Click);
+            Loader.Load(Loader.Scene.MainMenu);
+        });
+
+        gameObject.SetActive(false);
     }
 }

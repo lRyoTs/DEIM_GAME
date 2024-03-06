@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject spawnPosition;
     [SerializeField] private GameObject player;
     private bool isPaused = false;
+    private bool isFinish = false;
 
     private void Awake()
     {
@@ -21,7 +22,10 @@ public class GameManager : MonoBehaviour
         if(PlayerPrefs.HasKey(DataPersistence.PLAYER_POS_X)&&PlayerPrefs.HasKey(DataPersistence.PLAYER_POS_Y)&&PlayerPrefs.HasKey(DataPersistence.PLAYER_POS_Z))
         {
             spawnPosition.transform.position = DataPersistence.Instance.PlayerWorldPosition;
+            Debug.Log(spawnPosition.transform.position);
         }
+        isPaused = false;
+        isFinish = false;
     }
     // Start is called before the first frame update
     void Start()
@@ -32,17 +36,19 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (!isFinish)
         {
-            if (!isPaused)
+            if (Input.GetKeyDown(KeyCode.Escape))
             {
-                PauseGame();
+                if (!isPaused)
+                {
+                    PauseGame();
+                }
+                else
+                {
+                    ResumeGame();
+                } 
             }
-            else
-            {
-                ResumeGame();
-            }
-            
         }
     }
 
