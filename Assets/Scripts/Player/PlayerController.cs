@@ -69,6 +69,9 @@ public class PlayerController : MonoBehaviour
         _input = GetComponent<PlayerControls>();
         _animator = GetComponent<Animator>();
 
+        DesactivateCharacterController(); //Desactivate characterController to move player position
+                                          //Because Character controller overwrites player.transform.position to its previous position
+
         EventManager.AddHandler(EventManager.EVENT.OnPause, UnlockCursor);
         EventManager.AddHandler(EventManager.EVENT.OnResume, LockCursor);
     }
@@ -202,5 +205,14 @@ public class PlayerController : MonoBehaviour
 
     public void UnlockCursor() {
         Cursor.lockState = CursorLockMode.None;
+    }
+
+    public void DesactivateCharacterController()
+    {
+        _characterController.enabled = false;
+    }
+
+    public void ActivateCharacterController() {
+        _characterController.enabled = true;
     }
 }

@@ -26,18 +26,6 @@ public class LevelSystem : MonoBehaviour
     public int divisionMultiplier = 7;
     #endregion
 
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        Level = DataPersistence.Instance.PlayerCurrentLevel;
-        currentXp = DataPersistence.Instance.PlayerCurrentExp;
-        requiredXp = CalculateRequiredXp();
-        frontXpbar.fillAmount = currentXp / requiredXp;
-        backXpBar.fillAmount = currentXp / requiredXp;
-        UpdateLevelText();
-    }
-
     // Update is called once per frame
     void Update()
     {
@@ -45,6 +33,16 @@ public class LevelSystem : MonoBehaviour
         if (currentXp > requiredXp) {
             LevelUp();
         }
+    }
+
+    public void InitializedLevelSystem()
+    {
+        Level = DataPersistence.Instance.PlayerCurrentLevel;
+        currentXp = DataPersistence.Instance.PlayerCurrentExp;
+        requiredXp = CalculateRequiredXp();
+        frontXpbar.fillAmount = currentXp / requiredXp;
+        backXpBar.fillAmount = currentXp / requiredXp;
+        UpdateLevelText();
     }
 
     public void UpdateXpUI()

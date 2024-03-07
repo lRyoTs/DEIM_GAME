@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set;}
     [SerializeField] private GameObject spawnPosition;
-    [SerializeField] private GameObject player;
+    private PlayerController player;
     private bool isPaused = false;
     private bool isFinish = false;
 
@@ -18,12 +18,7 @@ public class GameManager : MonoBehaviour
             Debug.Log("There is more than 1 Instance of GameManager");
         }
         Instance = this;
-        
-        if(PlayerPrefs.HasKey(DataPersistence.PLAYER_POS_X)&&PlayerPrefs.HasKey(DataPersistence.PLAYER_POS_Y)&&PlayerPrefs.HasKey(DataPersistence.PLAYER_POS_Z))
-        {
-            spawnPosition.transform.position = DataPersistence.Instance.PlayerWorldPosition;
-            Debug.Log(spawnPosition.transform.position);
-        }
+
         isPaused = false;
         isFinish = false;
     }
@@ -68,8 +63,22 @@ public class GameManager : MonoBehaviour
 
     private void StartGame()
     {
+        //Initialize Player
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+
+        Debug.Log($"Previuos spawm position {spawnPosition.transform.position}/// Player position:{player.transform.position}");
+        if (PlayerPrefs.HasKey(DataPersistence.PLAYER_POS_X) && PlayerPrefs.HasKey(DataPersistence.PLAYER_POS_Y) && PlayerPrefs.HasKey(DataPersistence.PLAYER_POS_Z))
+        {
+            spawnPosition.transform.position = DataPersistence.Instance.PlayerWorldPosition;
+            Debug.Log($"New spawn position {spawnPosition.transform.position}");
+        }
+
+        Debug.Log($" Current position {player.transform.position}");
         player.transform.position = spawnPosition.transform.position;
-        player.transform.rotation = spawnPosition.transform.rotation;
+        Debug.Log($" New player position {player.transform.position}");
+        player.ActivateCharacterController(); //Activate Character Controller
+        player.GetComponent<LevelSystem>().InitializedLevelSystem();
+        player.GetComponent<PlayerStats>().CalculateStats();
         SoundManager.CreateSoundManagerGameobject();
         SoundManager.PlaySong(SoundManager.Sound.Exploration);
         DataPersistence.Instance.CurrentScene = Loader.GetCurrentScene();

@@ -5,6 +5,7 @@ using UnityEngine;
 public class CheckPoint : MonoBehaviour
 {
     private GameObject player;
+    private PlayerControls playerInput;
     [SerializeField] private ParticleSystem checkpointParticles;
     [SerializeField] private GameObject interactInput;
     // Start is called before the first frame update
@@ -12,6 +13,7 @@ public class CheckPoint : MonoBehaviour
     {
         interactInput.SetActive(false);
         player = GameObject.FindWithTag("Player");
+        playerInput = player.GetComponent<PlayerControls>();
     }
 
 
@@ -29,8 +31,9 @@ public class CheckPoint : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if(other.gameObject.CompareTag("Player") && player.GetComponent<PlayerControls>().Interact)
+        if(other.gameObject.CompareTag("Player") && playerInput.Interact)
         {
+            playerInput.Interact = false;
             DataPersistence.Instance.SaveInPlayerPrefs();
             SoundManager.PlaySound(SoundManager.Sound.Save);
         }

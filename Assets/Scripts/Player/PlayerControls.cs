@@ -8,7 +8,7 @@ public class PlayerControls : MonoBehaviour
     public Vector2 Move { get; private set;}
     public Vector2 Look { get; private set;}
     public bool Jump {get ; set;}
-    public bool Interact { get; private set;}
+    public bool Interact { get; set;}
     public bool Shoot { get; private set;}
 
     [Header("Mouse Cursor Settings")]
@@ -65,6 +65,7 @@ public class PlayerControls : MonoBehaviour
     public void InteractInput(bool newInteractsState)
     {
         Interact = newInteractsState;
+        Debug.Log(Interact);
     }
 
     public void ShootInput(bool newShootState) {

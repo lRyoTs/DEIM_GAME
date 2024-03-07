@@ -56,7 +56,7 @@ public class DataPersistence : MonoBehaviour
     }
 
     public void GetPlayersPrefsPlayerPosition() {
-        PlayerWorldPosition = new Vector3(PlayerPrefs.GetFloat(PLAYER_POS_X, 0), PlayerPrefs.GetFloat(PLAYER_POS_X, 0), PlayerPrefs.GetFloat(PLAYER_POS_X, 0));
+        PlayerWorldPosition = new Vector3(PlayerPrefs.GetFloat(PLAYER_POS_X, 0), PlayerPrefs.GetFloat(PLAYER_POS_Y, 0), PlayerPrefs.GetFloat(PLAYER_POS_Z, 0));
     }
 
     public void GetPlayerPrefsLevel()

@@ -185,7 +185,6 @@ GameObject:
   - component: {fileID: 3236133345844923981}
   - component: {fileID: 4931777180862412098}
   - component: {fileID: 5706210233053024011}
-  - component: {fileID: 687878810099512576}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -353,9 +352,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   baseHp: 50
   baseAttack: 5
-  maxHp: 0
-  attackCeilling: 0
-  attackFloor: 0
 --- !u!114 &4931777180862412098
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -371,6 +367,7 @@ MonoBehaviour:
   chipSpeed: 2
   frontHealthBar: {fileID: 0}
   backHealthBar: {fileID: 0}
+  hitCooldown: 1
 --- !u!95 &5706210233053024011
 Animator:
   serializedVersion: 5
@@ -392,29 +389,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!136 &687878810099512576
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3108148070716145828}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &3557542342923133998
 GameObject:
   m_ObjectHideFlags: 0
