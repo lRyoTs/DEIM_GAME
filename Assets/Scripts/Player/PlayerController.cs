@@ -8,24 +8,25 @@ public class PlayerController : MonoBehaviour
 {
     #region Variables
     public enum PlayerState {
-        OnField,
-        OnBattle,
+        Normal,
+        Tired,
         Death
     }
 
-    private PlayerState _playerState;
+    public PlayerState _playerState;
 
     [Header("References")]
     private PlayerInput _playerInput;
     private CharacterController _characterController;
     private PlayerControls _input;
     private Animator _animator;
+    private PlayerStats _playerStats;
+    private LevelSystem _levelSystem;
 
     [SerializeField]
     private Transform cameraTransform;
 
     [Header("Movement")]
-    private Vector3 startPosition;
     [SerializeField]
     private float playerSpeed = 5.0f;
     [SerializeField]
@@ -63,11 +64,14 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
-        _playerState = PlayerState.OnField;
+        _playerState = PlayerState.Normal;
+        //Get References
         _characterController = GetComponent<CharacterController>();
         _playerInput = GetComponent<PlayerInput>();
         _input = GetComponent<PlayerControls>();
         _animator = GetComponent<Animator>();
+        _playerStats = GetComponent<PlayerStats>();
+        _levelSystem = GetComponent<LevelSystem>();
 
         DesactivateCharacterController(); //Desactivate characterController to move player position
                                           //Because Character controller overwrites player.transform.position to its previous position
@@ -85,12 +89,13 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         switch (_playerState) {
-            case PlayerState.OnField:
+            case PlayerState.Normal:
                 Jump();
                 HandleMovement();
                 break;
-            case PlayerState.OnBattle:
+            case PlayerState.Tired:
                 Jump();
+                HandleMovement();
                 break;
             case PlayerState.Death:
                 break;
@@ -101,10 +106,10 @@ public class PlayerController : MonoBehaviour
     {
         switch (_playerState)
         {
-            case PlayerState.OnField:
+            case PlayerState.Normal:
                 Look();
                 break;
-            case PlayerState.OnBattle:
+            case PlayerState.Tired:
                 Look();
                 break;
             case PlayerState.Death:
@@ -116,7 +121,21 @@ public class PlayerController : MonoBehaviour
 
     private void HandleMovement() {
 
-        float targetSpeed = _input.Move != Vector2.zero ? playerSpeed : 0 ;
+        float targetSpeed;
+
+        if(_input.Move != Vector2.zero)
+        {
+            targetSpeed = _playerState != PlayerState.Tired ? playerSpeed : playerSpeed/2 ;
+            isWalking = true ;
+        }
+        else
+        {
+            isWalking= false ;
+            targetSpeed = 0 ;
+        }
+        
+
+        isWalking = _input.Move != Vector2.zero ? true : false;
 
         Vector3 move = new Vector3(_input.Move.x, 0, _input.Move.y);
         
@@ -130,9 +149,6 @@ public class PlayerController : MonoBehaviour
         Vector3 targetDirection = Quaternion.Euler(0.0f, targetAngle, 0.0f) * Vector3.forward;
         //Move player
         _characterController.Move((targetDirection.normalized * targetSpeed * Time.deltaTime) + verticalVelocity * Time.deltaTime);
-
-        isWalking = targetSpeed > 0 ? true : false;
-        
     }
 
     private void Jump() {
@@ -180,7 +196,6 @@ public class PlayerController : MonoBehaviour
         // Cinemachine will follow this target
         CinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride,
             _cinemachineTargetYaw, 0.0f);
-        //Vector2 targetMouseDelta = playerInput.actions["Look"].ReadValue()*Time.smoothDeltaTime;
     }
 
     private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
@@ -188,15 +203,6 @@ public class PlayerController : MonoBehaviour
         if (lfAngle < -360f) lfAngle += 360f;
         if (lfAngle > 360f) lfAngle -= 360f;
         return Mathf.Clamp(lfAngle, lfMin, lfMax);
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        //Enter in combat
-        if (collision.gameObject.CompareTag("Enemy")) {
-            _playerInput.SwitchCurrentActionMap("PlayerOnBattle");
-            _playerState = PlayerState.OnBattle;
-        }
     }
 
     public void LockCursor() {

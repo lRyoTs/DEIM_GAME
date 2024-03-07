@@ -8,7 +8,8 @@ public class Deadzone : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            other.gameObject.GetComponent<PlayerLife>().SetCurrentHealth(0);
+            PlayerLife playerLife = other.GetComponent<PlayerLife>();
+            playerLife.TakeDamage(playerLife.GetCurrentHealth());
         }
     }
 }

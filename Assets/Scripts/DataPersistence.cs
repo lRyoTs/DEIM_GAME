@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -41,7 +42,9 @@ public class DataPersistence : MonoBehaviour
             GetPlayersPrefsPlayerPosition();
         }
     }
-
+    /// <summary>
+    /// Save all game information in player prefs
+    /// </summary>
     public void SaveInPlayerPrefs() {
         PlayerPrefs.SetInt(PLAYER_CURRENT_EXP,PlayerCurrentExp);
         PlayerPrefs.SetInt(PLAYER_LEVEL, PlayerCurrentLevel);
@@ -51,8 +54,17 @@ public class DataPersistence : MonoBehaviour
         PlayerPrefs.SetFloat(PLAYER_POS_Z, PlayerWorldPosition.z);
     }
 
-    public void DeletePlayerPrefs() {
-        PlayerPrefs.DeleteAll();
+    /// <summary>
+    /// Delete all player prefs unrelated to sound or settings
+    /// </summary>
+    public void DeletePlayerPrefsInfo() {
+        PlayerPrefs.DeleteKey(PLAYER_CURRENT_EXP);
+        PlayerPrefs.DeleteKey(PLAYER_LEVEL);
+        PlayerPrefs.DeleteKey(CURRENT_SCENE);
+        PlayerPrefs.DeleteKey(PLAYER_POS_X);
+        PlayerPrefs.DeleteKey(PLAYER_POS_Y);
+        PlayerPrefs.DeleteKey(PLAYER_POS_Z);
+
     }
 
     public void GetPlayersPrefsPlayerPosition() {
@@ -72,11 +84,34 @@ public class DataPersistence : MonoBehaviour
         CurrentScene = PlayerPrefs.GetString(CURRENT_SCENE, "Zone1");
     }
 
-    public void GetInfoFromPlayerPrefs()
+    /// <summary>
+    /// Load Game Information
+    /// </summary>
+    public void LoadFromPlayerPrefs()
     {
         GetPlayerPrefsExp();
         GetPlayerPrefsLevel();
         GetPlayersPrefsPlayerPosition();
         GetPlayerPrefsCurrentScene();
+    }
+
+    /// <summary>
+    /// Delete PlayerWorldPos player prefs once players wins
+    /// </summary>
+    public void DeletePlayerWorldPos()
+    {
+        PlayerPrefs.DeleteKey(PLAYER_POS_X);
+        PlayerPrefs.DeleteKey(PLAYER_POS_Y);
+        PlayerPrefs.DeleteKey(PLAYER_POS_Z);
+    }
+
+    /// <summary>
+    /// Saves information about level and next scene
+    /// </summary>
+    public void SaveInPlayerPrefsProgress()
+    {
+        PlayerPrefs.SetInt(PLAYER_CURRENT_EXP, PlayerCurrentExp);
+        PlayerPrefs.SetInt(PLAYER_LEVEL, PlayerCurrentLevel);
+        PlayerPrefs.SetString(CURRENT_SCENE, CurrentScene);
     }
 }

@@ -26,8 +26,8 @@ public class PlayerLife : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-            health = Mathf.Clamp(health, 0, maxHealth);
-            UpdateHealthUI();
+        health = Mathf.Clamp(health, 0, maxHealth);
+        UpdateHealthUI();
     }
 
     public void SetMaxHealth(float maxHealth) {
@@ -47,7 +47,7 @@ public class PlayerLife : MonoBehaviour
     {
         float fillF = frontHealthBar.fillAmount;
         float fillB = backHealthBar.fillAmount;
-        float hFraction = health / maxHealth; //Health ratio
+        float hFraction = health / maxHealth; //Health ratio gives a number between 0 and 1 
         
         if(fillB > hFraction)
         {
@@ -66,8 +66,6 @@ public class PlayerLife : MonoBehaviour
             float percentComplete = lerpTimer / chipSpeed;
             frontHealthBar.fillAmount = Mathf.Lerp(fillF, backHealthBar.fillAmount, percentComplete);
         }
-        
-        Debug.Log($"Health:{health} MaxHealth:{maxHealth}");
     }
 
     public void TakeDamage(float damage) {
@@ -78,9 +76,10 @@ public class PlayerLife : MonoBehaviour
             lerpTimer = 0f;
         }
 
-        if(health < 0)
+        if(health <= 0)
         {
             isDead = true;
+            GameManager.Instance.IsLose(); //Temporal placement
         }
     }
 

@@ -7,10 +7,16 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set;}
+
+    [Header("References")]
+    private PlayerController playerController;
+    private LevelSystem playerLevel;
     [SerializeField] private GameObject spawnPosition;
-    private PlayerController player;
+
+    [Header("Game Manager Logic")]
     private bool isPaused = false;
-    private bool isFinish = false;
+    private bool isLose = false;
+    private bool isWin = false;
 
     private void Awake()
     {
@@ -20,7 +26,8 @@ public class GameManager : MonoBehaviour
         Instance = this;
 
         isPaused = false;
-        isFinish = false;
+        isLose = false;
+        isWin = false;
     }
     // Start is called before the first frame update
     void Start()
@@ -31,7 +38,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!isFinish)
+        if (!IsFinish())
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
@@ -64,23 +71,44 @@ public class GameManager : MonoBehaviour
     private void StartGame()
     {
         //Initialize Player
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
-
-        Debug.Log($"Previuos spawm position {spawnPosition.transform.position}/// Player position:{player.transform.position}");
+        playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         if (PlayerPrefs.HasKey(DataPersistence.PLAYER_POS_X) && PlayerPrefs.HasKey(DataPersistence.PLAYER_POS_Y) && PlayerPrefs.HasKey(DataPersistence.PLAYER_POS_Z))
         {
             spawnPosition.transform.position = DataPersistence.Instance.PlayerWorldPosition;
-            Debug.Log($"New spawn position {spawnPosition.transform.position}");
         }
+        playerController.transform.position = spawnPosition.transform.position;
+        playerController.ActivateCharacterController(); //Activate Character Controller
+        playerLevel = playerController.GetComponent<LevelSystem>();
+        playerLevel.InitializedLevelSystem();
+        playerController.GetComponent<PlayerStats>().CalculateStats();
 
-        Debug.Log($" Current position {player.transform.position}");
-        player.transform.position = spawnPosition.transform.position;
-        Debug.Log($" New player position {player.transform.position}");
-        player.ActivateCharacterController(); //Activate Character Controller
-        player.GetComponent<LevelSystem>().InitializedLevelSystem();
-        player.GetComponent<PlayerStats>().CalculateStats();
         SoundManager.CreateSoundManagerGameobject();
         SoundManager.PlaySong(SoundManager.Sound.Exploration);
         DataPersistence.Instance.CurrentScene = Loader.GetCurrentScene();
+    }
+
+    public bool IsFinish() {
+        return isWin || isLose;
+    }
+
+    public void IsWin()
+    {
+        isWin = true;
+        WinUI.Instance.Show();
+        //Lose Sound
+
+        //Update DataPersistence
+        DataPersistence.Instance.PlayerCurrentLevel = playerLevel.Level;
+        DataPersistence.Instance.PlayerCurrentExp = (int)playerLevel.CurrentXp;
+        //Save in PlayerPrefs
+        DataPersistence.Instance.DeletePlayerWorldPos();
+        DataPersistence.Instance.SaveInPlayerPrefsProgress();
+    }
+
+    public void IsLose()
+    {
+        isLose = true;
+        LoseUI.Instance.Show();
+        //Lose Sound
     }
 }

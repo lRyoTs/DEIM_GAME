@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,7 @@ public class LoseUI : MonoBehaviour
 {
     public static LoseUI Instance { get; private set; }
     [SerializeField] private Button mainMenuButton;
+    [SerializeField] private Button retyButton;
 
     private void Awake()
     {
@@ -22,6 +24,21 @@ public class LoseUI : MonoBehaviour
             Loader.Load(Loader.Scene.MainMenu);
         });
 
+        retyButton.onClick.AddListener(() => {
+            SoundManager.PlaySound(SoundManager.Sound.Click);
+            DataPersistence.Instance.LoadFromPlayerPrefs();
+            Loader.Load(DataPersistence.Instance.CurrentScene);
+        });
+
         gameObject.SetActive(false);
+    }
+    public void Hide()
+    {
+        gameObject.SetActive(false);
+    }
+
+    public void Show()
+    {
+        gameObject.SetActive(true);   
     }
 }

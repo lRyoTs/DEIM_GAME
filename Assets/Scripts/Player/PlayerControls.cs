@@ -65,7 +65,6 @@ public class PlayerControls : MonoBehaviour
     public void InteractInput(bool newInteractsState)
     {
         Interact = newInteractsState;
-        Debug.Log(Interact);
     }
 
     public void ShootInput(bool newShootState) {

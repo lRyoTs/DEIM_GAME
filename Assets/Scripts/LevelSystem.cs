@@ -9,7 +9,7 @@ public class LevelSystem : MonoBehaviour
     #region VARIABLES
     public const int MAX_LEVEL = 50;
     public int Level { get; private set; }
-    private float currentXp;
+    public float CurrentXp {  get; private set; }
     private float requiredXp;
 
     private float lerpTimer;
@@ -30,7 +30,7 @@ public class LevelSystem : MonoBehaviour
     void Update()
     {
         UpdateXpUI();
-        if (currentXp > requiredXp) {
+        if (CurrentXp > requiredXp) {
             LevelUp();
         }
     }
@@ -38,16 +38,16 @@ public class LevelSystem : MonoBehaviour
     public void InitializedLevelSystem()
     {
         Level = DataPersistence.Instance.PlayerCurrentLevel;
-        currentXp = DataPersistence.Instance.PlayerCurrentExp;
+        CurrentXp = DataPersistence.Instance.PlayerCurrentExp;
         requiredXp = CalculateRequiredXp();
-        frontXpbar.fillAmount = currentXp / requiredXp;
-        backXpBar.fillAmount = currentXp / requiredXp;
+        frontXpbar.fillAmount = CurrentXp / requiredXp;
+        backXpBar.fillAmount = CurrentXp / requiredXp;
         UpdateLevelText();
     }
 
     public void UpdateXpUI()
     {
-        float xpFraction = currentXp / requiredXp;
+        float xpFraction = CurrentXp / requiredXp;
         float FXP = frontXpbar.fillAmount;
         if (FXP < xpFraction) {
             delayTimer += Time.deltaTime;
@@ -66,7 +66,7 @@ public class LevelSystem : MonoBehaviour
     }
 
     public void GainExperienceFlatRate(float xpGained) {
-        currentXp += xpGained; 
+        CurrentXp += xpGained; 
         //Reset Timers
         lerpTimer = 0;
         delayTimer = 0;
@@ -78,14 +78,14 @@ public class LevelSystem : MonoBehaviour
             Level++;
             frontXpbar.fillAmount = 0;
             backXpBar.fillAmount = 0;
-            currentXp = Mathf.RoundToInt(currentXp - requiredXp);
+            CurrentXp = Mathf.RoundToInt(CurrentXp - requiredXp);
             requiredXp = CalculateRequiredXp();
             UpdateLevelText();
             EventManager.Broadcast(EventManager.EVENT.OnLevelUp);
 
             //Store in DataPersistence
             DataPersistence.Instance.PlayerCurrentLevel = Level;
-            DataPersistence.Instance.PlayerCurrentExp = (int)currentXp;
+            DataPersistence.Instance.PlayerCurrentExp = (int)CurrentXp;
         }
        
     }
