@@ -81,7 +81,8 @@ public class GameManager : MonoBehaviour
         playerLevel = playerController.GetComponent<LevelSystem>();
         playerLevel.InitializedLevelSystem();
         playerController.GetComponent<PlayerStats>().CalculateStats();
-
+        
+        Cursor.lockState = CursorLockMode.Locked;
         SoundManager.CreateSoundManagerGameobject();
         SoundManager.PlaySong(SoundManager.Sound.Exploration);
         DataPersistence.Instance.CurrentScene = Loader.GetCurrentScene();
@@ -103,12 +104,16 @@ public class GameManager : MonoBehaviour
         //Save in PlayerPrefs
         DataPersistence.Instance.DeletePlayerWorldPos();
         DataPersistence.Instance.SaveInPlayerPrefsProgress();
+
+        Cursor.lockState = CursorLockMode.None;
     }
 
     public void IsLose()
     {
         isLose = true;
         LoseUI.Instance.Show();
+
         //Lose Sound
+        Cursor.lockState= CursorLockMode.None;
     }
 }

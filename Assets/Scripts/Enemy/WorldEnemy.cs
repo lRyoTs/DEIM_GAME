@@ -13,6 +13,8 @@ public class WorldEnemy : MonoBehaviour
     private NavMeshAgent _navMeshAgent;
     [SerializeField] private GameObject player;
     private Animator _animator;
+    private EnemyStats _enemyStats;
+    private EnemyLife _enemyLife;
 
     [Header("World Atrributes")]
     private Vector3 startPosition;
@@ -21,7 +23,6 @@ public class WorldEnemy : MonoBehaviour
     [SerializeField] private LayerMask playerLayerMask;
     [SerializeField] private float visionRange;
     private bool inVisionRange = false; //Check if the player is in Vision range
-    [SerializeField] private int baseDamage = 15;
     [SerializeField] private float enemyOffsetY; 
 
     [Header("Attack")]
@@ -36,6 +37,8 @@ public class WorldEnemy : MonoBehaviour
     {
         _navMeshAgent = GetComponent<NavMeshAgent>();
         _animator = GetComponent<Animator>();
+        _enemyStats = GetComponent<EnemyStats>();
+        _enemyLife = GetComponent<EnemyLife>();
         startPosition = transform.position;
         canAttack = true;
     }
@@ -43,7 +46,7 @@ public class WorldEnemy : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //player = GameObject.FindWithTag("Player");
+        player = GameObject.FindWithTag("Player");
     }
 
     // Update is called once per frame
@@ -55,7 +58,6 @@ public class WorldEnemy : MonoBehaviour
         if (inAttackRange && canAttack)
         {
             Attack();
-            Debug.Log("In attack Range");
         }
         else if(inVisionRange){
             
@@ -70,6 +72,11 @@ public class WorldEnemy : MonoBehaviour
     private void LateUpdate()
     { 
         _animator.SetBool("Walk",_navMeshAgent.hasPath);
+    }
+
+    private void OnDisable()
+    {
+        player.GetComponent<LevelSystem>().GainExperienceFlatRate(_enemyStats.GetExperienceValue()); //Once destroyed give Player exp   
     }
 
     private void Patrol() {
@@ -95,8 +102,8 @@ public class WorldEnemy : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Player")) {
-            //player.GetComponent<PlayerLife>().TakeDamage(baseDamage);
-            PostProcesingManager.instance.VignetteOn();
+            player.GetComponent<PlayerLife>().TakeDamage(_enemyStats.GetDamage());
+            _enemyLife.TakeDamage(player.GetComponent<PlayerStats>().GetAttackDmg());
         }
     }
 
