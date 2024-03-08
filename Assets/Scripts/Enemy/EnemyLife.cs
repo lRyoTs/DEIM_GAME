@@ -13,6 +13,12 @@ public class EnemyLife: MonoBehaviour
     [SerializeField] public Image frontHealthBar;
     [SerializeField] public Image backHealthBar;
 
+    private WorldEnemy _enemy;
+
+    private void Awake()
+    {
+        _enemy = GetComponent<WorldEnemy>();
+    }
 
     // Update is called once per frame
     void Update()
@@ -59,6 +65,7 @@ public class EnemyLife: MonoBehaviour
 
         if (health <= 0)
         {
+            _enemy.GiveExpValue();
             gameObject.SetActive(false);
         }
     }

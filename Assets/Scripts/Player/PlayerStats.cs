@@ -16,6 +16,7 @@ public class PlayerStats : MonoBehaviour
     private int attackCeilling;
     private int attackFloor;
 
+
     private void Awake()
     {
         _levelInfo = GetComponent<LevelSystem>();

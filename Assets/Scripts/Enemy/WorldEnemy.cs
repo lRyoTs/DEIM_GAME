@@ -76,7 +76,6 @@ public class WorldEnemy : MonoBehaviour
 
     private void OnDisable()
     {
-        player.GetComponent<LevelSystem>().GainExperienceFlatRate(_enemyStats.GetExperienceValue()); //Once destroyed give Player exp   
     }
 
     private void Patrol() {
@@ -141,4 +140,8 @@ public class WorldEnemy : MonoBehaviour
         Gizmos.DrawRay(transform.position,transform.forward*attackRange);
     }
 
+    public void GiveExpValue()
+    {
+        player.GetComponent<LevelSystem>().GainExperienceFlatRate(_enemyStats.GetExperienceValue());
+    }
 }
