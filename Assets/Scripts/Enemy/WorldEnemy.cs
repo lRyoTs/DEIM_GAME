@@ -22,6 +22,7 @@ public class WorldEnemy : MonoBehaviour
     [SerializeField] private float visionRange;
     private bool inVisionRange = false; //Check if the player is in Vision range
     [SerializeField] private int baseDamage = 15;
+    [SerializeField] private float enemyOffsetY; 
 
     [Header("Attack")]
     [SerializeField] protected float attackCooldownTimer = 2f;
@@ -29,52 +30,46 @@ public class WorldEnemy : MonoBehaviour
     protected bool inAttackRange;
     protected bool canAttack;
 
-    [Header("Animations")]
-    private bool isAttacking;
-    private bool isWalking;
 
 
     private void Awake()
     {
         _navMeshAgent = GetComponent<NavMeshAgent>();
+        _animator = GetComponent<Animator>();
         startPosition = transform.position;
+        canAttack = true;
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        player = GameObject.FindWithTag("Player");
+        //player = GameObject.FindWithTag("Player");
     }
 
     // Update is called once per frame
     void Update()
     {
-        inAttackRange = Physics.CheckSphere(transform.position,attackRange,playerLayerMask);
+        inAttackRange = Physics.Raycast(transform.position + Vector3.up*enemyOffsetY ,transform.forward,attackRange,playerLayerMask);
         inVisionRange = Physics.CheckSphere(transform.position,visionRange,playerLayerMask);
-        
-        if (!(inVisionRange || inAttackRange))
+        Debug.Log($"InAttackRAnge: {inAttackRange} inVisionRange: {inVisionRange} canAttack {canAttack}");
+        if (inAttackRange && canAttack)
         {
-            Patrol();
-
+            Attack();
+            Debug.Log("In attack Range");
         }
         else if(inVisionRange){
+            
             Follow();
         }
         else
         {
-            Attack();
+            Patrol();
         }
     }
 
     private void LateUpdate()
-    {
-        /*
-        if (isAttacking)
-        {
-            _animator.SetTrigger("Attack");
-        }
-        _animator.SetBool("Walk", isWalking);
-        */
+    { 
+        _animator.SetBool("Walk",_navMeshAgent.hasPath);
     }
 
     private void Patrol() {
@@ -91,22 +86,16 @@ public class WorldEnemy : MonoBehaviour
     }
 
     private void Attack() {
-        if (canAttack)
-        {
-            StartCoroutine("AttackCooldown");
-            isAttacking = true;
-            
-        }
-        else
-        {
-            isAttacking = false;
-        }
+        StartCoroutine("AttackCooldown");
+        _animator.SetTrigger("Attack");
+        Debug.Log("attack");
+
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Player")) {
-            player.GetComponent<PlayerLife>().TakeDamage(baseDamage);
+            //player.GetComponent<PlayerLife>().TakeDamage(baseDamage);
             PostProcesingManager.instance.VignetteOn();
         }
     }
@@ -139,8 +128,10 @@ public class WorldEnemy : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(startPosition, roamRadius);
-        Gizmos.color = Color.red;
+        Gizmos.color = Color.gray;
         Gizmos.DrawWireSphere(transform.position, visionRange);
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(transform.position,transform.forward*attackRange);
     }
 
 }
