@@ -11,7 +11,7 @@ public class WorldEnemy : MonoBehaviour
 {
     [Header("References")]
     private NavMeshAgent _navMeshAgent;
-    [SerializeField] private GameObject player;
+    [SerializeField] private Transform player;
     private Animator _animator;
     private EnemyStats _enemyStats;
     private EnemyLife _enemyLife;
@@ -19,11 +19,9 @@ public class WorldEnemy : MonoBehaviour
     [Header("World Atrributes")]
     private Vector3 startPosition;
     [SerializeField] int roamRadius;
-    [SerializeField] private float enemySpeed;
     [SerializeField] private LayerMask playerLayerMask;
     [SerializeField] private float visionRange;
     private bool inVisionRange = false; //Check if the player is in Vision range
-    [SerializeField] private float enemyOffsetY; 
 
     [Header("Attack")]
     [SerializeField] protected float attackCooldownTimer = 2f;
@@ -46,15 +44,14 @@ public class WorldEnemy : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        player = GameObject.FindWithTag("Player");
+        player = GameObject.FindWithTag("Player").transform;
     }
 
     // Update is called once per frame
     void Update()
     {
-        inAttackRange = Physics.Raycast(transform.position + Vector3.up*enemyOffsetY ,transform.forward,attackRange,playerLayerMask);
+        inAttackRange = Physics.CheckSphere(transform.position,attackRange,playerLayerMask);
         inVisionRange = Physics.CheckSphere(transform.position,visionRange,playerLayerMask);
-        Debug.Log($"InAttackRAnge: {inAttackRange} inVisionRange: {inVisionRange} canAttack {canAttack}");
         if (inAttackRange && canAttack)
         {
             Attack();
@@ -88,13 +85,14 @@ public class WorldEnemy : MonoBehaviour
     }
 
     private void Follow() {
-        _navMeshAgent.SetDestination(player.transform.position);
+        _navMeshAgent.SetDestination(player.position);
     }
 
     private void Attack() {
+        _navMeshAgent.SetDestination(transform.position);
+        transform.LookAt(player);
         StartCoroutine("AttackCooldown");
         _animator.SetTrigger("Attack");
-        Debug.Log("attack");
 
     }
 

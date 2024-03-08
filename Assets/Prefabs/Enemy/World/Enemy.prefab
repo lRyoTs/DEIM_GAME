@@ -618,13 +618,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
-  roamRadius: 10
-  enemySpeed: 0
+  roamRadius: 20
   playerLayerMask:
     serializedVersion: 2
     m_Bits: 64
-  visionRange: 5
-  enemyOffsetY: 0
+  visionRange: 10
   attackCooldownTimer: 2
   attackRange: 4
 --- !u!95 &4537762106444355462
@@ -664,7 +662,7 @@ MonoBehaviour:
   baseExp: 30
   baseDmg: 10
   level: 1
-  enemySpeed: 0
+  enemySpeed: 5
   enemyName: BoxFace
   enemyInfo: {fileID: 33581059384508594}
 --- !u!114 &1922510309447624883

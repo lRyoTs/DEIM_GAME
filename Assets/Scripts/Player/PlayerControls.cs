@@ -10,6 +10,7 @@ public class PlayerControls : MonoBehaviour
     public bool Jump {get ; set;}
     public bool Interact { get; set;}
     public bool Shoot { get; private set;}
+    public bool Dash {  get; private set;}
 
     [Header("Mouse Cursor Settings")]
     public bool cursorLocked = true;
@@ -47,6 +48,11 @@ public class PlayerControls : MonoBehaviour
         ShootInput(value.isPressed);
     }
 
+    public void OnDash(InputValue value)
+    {
+        DashInput(value.isPressed);
+    }
+
     public void MoveInput(Vector2 newMoveDirection)
     {
         Move = newMoveDirection;
@@ -69,6 +75,11 @@ public class PlayerControls : MonoBehaviour
 
     public void ShootInput(bool newShootState) {
         Shoot = newShootState;
+    }
+
+    public void DashInput(bool newDashState)
+    {
+        Dash = newDashState;
     }
 
     private void OnApplicationFocus(bool hasFocus)
