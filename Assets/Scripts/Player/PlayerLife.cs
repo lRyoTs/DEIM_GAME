@@ -6,6 +6,10 @@ using UnityEngine.UI;
 //Script that Manages PlayerLife
 public class PlayerLife : MonoBehaviour
 {
+    [Header("References")]
+    private PlayerController playerController;
+
+    [Header("HP")]
     private float health;
     private float lerpTimer;
     private float maxHealth;
@@ -21,6 +25,7 @@ public class PlayerLife : MonoBehaviour
     {
         isDead = false;
         canTakeDamage = true;
+        playerController = GetComponent<PlayerController>();
     }
 
     // Update is called once per frame
@@ -79,6 +84,7 @@ public class PlayerLife : MonoBehaviour
         if(health <= 0)
         {
             isDead = true;
+            playerController.SetPlayerState(PlayerController.PlayerState.Dead);
             GameManager.Instance.IsLose(); //Temporal placement
         }
     }

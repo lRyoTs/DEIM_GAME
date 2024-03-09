@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Windows;
@@ -10,7 +11,7 @@ public class PlayerController : MonoBehaviour
     public enum PlayerState {
         Normal,
         Tired,
-        Death
+        Dead
     }
 
     public PlayerState _playerState;
@@ -38,6 +39,11 @@ public class PlayerController : MonoBehaviour
     private Vector3 verticalVelocity;
     private bool groundedPlayer;
     private bool isWalking;
+
+    [Header("Dash")]
+    private bool canDash = true;
+    [SerializeField] private float dashSpeed;
+    [SerializeField] private float dashTime;
    
     [Header("Cinemachine")]
     [Tooltip("The follow target set in the Cinemachine Virtual Camera that the camera will follow")]
@@ -76,6 +82,7 @@ public class PlayerController : MonoBehaviour
         DesactivateCharacterController(); //Desactivate characterController to move player position
                                           //Because Character controller overwrites player.transform.position to its previous position
 
+        canDash = true;
         EventManager.AddHandler(EventManager.EVENT.OnPause, UnlockCursor);
         EventManager.AddHandler(EventManager.EVENT.OnResume, LockCursor);
     }
@@ -92,12 +99,12 @@ public class PlayerController : MonoBehaviour
             case PlayerState.Normal:
                 Jump();
                 HandleMovement();
+                Shoot();
                 break;
             case PlayerState.Tired:
-                Jump();
                 HandleMovement();
                 break;
-            case PlayerState.Death:
+            case PlayerState.Dead:
                 break;
         }
     }
@@ -112,11 +119,18 @@ public class PlayerController : MonoBehaviour
             case PlayerState.Tired:
                 Look();
                 break;
-            case PlayerState.Death:
+            case PlayerState.Dead:
                 break;
         }
 
+        //Player Animations
         _animator.SetBool("Walk",isWalking);
+    }
+
+    private Vector3 GetMoveDirection()
+    {
+        Vector3 direction = new Vector3(_input.Move.x, 0, _input.Move.y).normalized;
+        return direction;
     }
 
     private void HandleMovement() {
@@ -137,22 +151,34 @@ public class PlayerController : MonoBehaviour
 
         isWalking = _input.Move != Vector2.zero ? true : false;
 
-        Vector3 move = new Vector3(_input.Move.x, 0, _input.Move.y);
+        Vector3 direction = GetMoveDirection();
         
-        move = move.x * cameraTransform.right.normalized + move.z * cameraTransform.forward.normalized;
+        //direction = direction.x * cameraTransform.right.normalized + direction.z * cameraTransform.forward.normalized;
 
         //Rotate towards camera
-        float targetAngle = Mathf.Atan2(move.x,move.z) * Mathf.Rad2Deg + cameraTransform.eulerAngles.y;
+        float targetAngle = Mathf.Atan2(direction.x,direction.z) * Mathf.Rad2Deg + cameraTransform.eulerAngles.y;
         Quaternion rotation = Quaternion.Euler(0,targetAngle, 0);
         transform.rotation = Quaternion.Lerp(transform.rotation, rotation, softRotation * Time.deltaTime);
 
         Vector3 targetDirection = Quaternion.Euler(0.0f, targetAngle, 0.0f) * Vector3.forward;
-        //Move player
-        _characterController.Move((targetDirection.normalized * targetSpeed * Time.deltaTime) + verticalVelocity * Time.deltaTime);
+        
+        //If dash input pressed and player not tired
+        if(_input.Dash && canDash && _playerState != PlayerState.Tired)
+        {
+            //Do dash
+            StartCoroutine(Dash(targetDirection));
+        }
+        else
+        {
+            //Move player
+            _characterController.Move((targetDirection.normalized * targetSpeed * Time.deltaTime) + verticalVelocity * Time.deltaTime);
+        }
+       
     }
 
     private void Jump() {
         groundedPlayer = _characterController.isGrounded;
+        verticalVelocity.y += gravityValue * Time.deltaTime;
         if (groundedPlayer)
         {
             //Stop velocity for dropping infinitely when grounded 
@@ -171,13 +197,11 @@ public class PlayerController : MonoBehaviour
         else {
             _input.Jump = false;
         }
-
-        if (verticalVelocity.y < 53)
-        {
-            verticalVelocity.y += gravityValue * Time.deltaTime;
-        }
     }
 
+    /// <summary>
+    /// Move virtual camera to aling to the desired camera angle
+    /// </summary>
     private void Look() {
         // if there is an input and camera position is not fixed
         if (_input.Look.sqrMagnitude >= _threshold && !LockCameraPosition)
@@ -198,11 +222,44 @@ public class PlayerController : MonoBehaviour
             _cinemachineTargetYaw, 0.0f);
     }
 
+    /// <summary>
+    /// Limits camera angle
+    /// </summary>
+    /// <param name="lfAngle">CurrentAngle</param>
+    /// <param name="lfMin">MinAngle</param>
+    /// <param name="lfMax">MaxAngle</param>
+    /// <returns></returns>
     private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
     {
         if (lfAngle < -360f) lfAngle += 360f;
         if (lfAngle > 360f) lfAngle -= 360f;
         return Mathf.Clamp(lfAngle, lfMin, lfMax);
+    }
+
+    /// <summary>
+    /// Coroutine that start Dash
+    /// </summary>
+    /// <param name="targetDirection">Desired direction</param>
+    /// <returns></returns>
+    private IEnumerator Dash(Vector3 targetDirection)
+    {
+        canDash = false;
+        _input.Dash = false;
+        float startTime = Time.time;
+        while (Time.time < startTime + dashTime) {
+            _characterController.Move(targetDirection.normalized * dashSpeed * Time.deltaTime);
+            yield return null;
+        }
+        canDash = true;
+    }
+
+    private void Shoot() {
+        throw new NotImplementedException();
+    }
+
+    public void SetPlayerState(PlayerState playerState)
+    {
+        _playerState = playerState;
     }
 
     public void LockCursor() {
