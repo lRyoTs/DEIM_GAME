@@ -43,7 +43,6 @@ public class PlayerStamina : MonoBehaviour
     {
         currentStamina = Mathf.Clamp(currentStamina, 0, MAX_STAMINA);
         UpdateStaminaUI();
-        Debug.Log($"{currentStamina}/{MAX_STAMINA}");
     }
 
     public void UpdateStaminaUI()
@@ -55,7 +54,6 @@ public class PlayerStamina : MonoBehaviour
         if (fillB > StaminaFraction)
         {
             frontStaminaBar.fillAmount = StaminaFraction;
-            Debug.Log(frontStaminaBar.fillAmount);
             backStaminaBar.color = Color.red;
             lerpTimer += Time.deltaTime;
             float percentComplete = lerpTimer / chipSpeed;
@@ -77,7 +75,6 @@ public class PlayerStamina : MonoBehaviour
         {
             currentStamina -= energyConsumed;
             lerpTimer = 0f;
-            Debug.Log($"{currentStamina}/{MAX_STAMINA}");
         }
 
         if (currentStamina <= 0)

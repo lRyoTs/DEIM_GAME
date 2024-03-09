@@ -37,7 +37,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float gravityValue = -9.81f;
     [SerializeField]
-    private float softRotation = 0.5f;
     private Vector3 verticalVelocity;
     private bool groundedPlayer;
     private bool isWalking;
@@ -273,7 +272,7 @@ public class PlayerController : MonoBehaviour
         {
             Vector3 aimDir = (_playerAimController.GetMouseWorldPosition() - ProjectileSpawnPosition.position).normalized;
             BulletPrefab.gameObject.transform.position = ProjectileSpawnPosition.position;
-            BulletPrefab.gameObject.transform.rotation = Quaternion.LookRotation(aimDir,Vector3.up);
+            BulletPrefab.gameObject.transform.rotation = Quaternion.LookRotation(aimDir, Vector3.up);
             BulletPrefab.Play();
             _playerStamina.ConsumeEnergy(shootStaminaCost);
             _input.Shoot = false;
@@ -315,5 +314,12 @@ public class PlayerController : MonoBehaviour
     public void SetSensitivity(float newSensitivity)
     {
         sensitivity = newSensitivity;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawRay(ProjectileSpawnPosition.position,ProjectileSpawnPosition.forward);
+        Gizmos.color = Color.green;
+        Gizmos.DrawRay(BulletPrefab.gameObject.transform.position, BulletPrefab.gameObject.transform.forward);
     }
 }

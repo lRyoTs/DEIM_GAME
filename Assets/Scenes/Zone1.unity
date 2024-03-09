@@ -386,7 +386,7 @@ MonoBehaviour:
   m_BlendUpdateMethod: 1
   m_DefaultBlend:
     m_Style: 1
-    m_Time: 2
+    m_Time: 0.2
     m_CustomCurve:
       serializedVersion: 2
       m_Curve: []
@@ -3741,6 +3741,11 @@ PrefabInstance:
     - target: {fileID: 5219221077040044984, guid: 6557a19e8ed4cb84aad24990b2c8c27f,
         type: 3}
       propertyPath: aimTransform
+      value: 
+      objectReference: {fileID: 750460851}
+    - target: {fileID: 5219221077040044984, guid: 6557a19e8ed4cb84aad24990b2c8c27f,
+        type: 3}
+      propertyPath: debugTansform
       value: 
       objectReference: {fileID: 750460851}
     - target: {fileID: 5219221077040044984, guid: 6557a19e8ed4cb84aad24990b2c8c27f,
