@@ -11,17 +11,13 @@ public class PlayerControls : MonoBehaviour
     public bool Interact { get; set;}
     public bool Shoot { get; set;}
     public bool Dash {  get; set;}
+    public bool Aim { get; set; }
 
     [Header("Mouse Cursor Settings")]
     public bool cursorLocked = true;
     public bool cursorInputForLook = true;
 
     public void OnMove(InputValue value)
-    {
-        MoveInput(value.Get<Vector2>());
-    }
-
-    public void OnDodge(InputValue value)
     {
         MoveInput(value.Get<Vector2>());
     }
@@ -53,6 +49,11 @@ public class PlayerControls : MonoBehaviour
         DashInput(value.isPressed);
     }
 
+    public void OnAim(InputValue value)
+    {
+        AimInput(value.isPressed);
+    }
+
     public void MoveInput(Vector2 newMoveDirection)
     {
         Move = newMoveDirection;
@@ -82,6 +83,11 @@ public class PlayerControls : MonoBehaviour
         Dash = newDashState;
     }
 
+    public void AimInput(bool newAimState)
+    {
+        Aim = newAimState;
+    }
+
     private void OnApplicationFocus(bool hasFocus)
     {
         SetCursorState(cursorLocked);
@@ -91,5 +97,4 @@ public class PlayerControls : MonoBehaviour
     {
         Cursor.lockState = newState ? CursorLockMode.Locked : CursorLockMode.None;
     }
-
 }

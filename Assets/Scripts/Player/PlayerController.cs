@@ -23,6 +23,8 @@ public class PlayerController : MonoBehaviour
     private Animator _animator;
     private PlayerStats _playerStats;
     private LevelSystem _levelSystem;
+    private PlayerStamina _playerStamina;
+    private PlayerAimController _playerAimController;
 
     [SerializeField]
     private Transform cameraTransform;
@@ -44,6 +46,11 @@ public class PlayerController : MonoBehaviour
     private bool canDash = true;
     [SerializeField] private float dashSpeed;
     [SerializeField] private float dashTime;
+
+    [Header("Stamina")]
+    private int jumpStaminaCost = 2;
+    private int dashStaminaCost = 5;
+    private int shootStaminaCost = 5;
    
     [Header("Cinemachine")]
     [Tooltip("The follow target set in the Cinemachine Virtual Camera that the camera will follow")]
@@ -60,31 +67,41 @@ public class PlayerController : MonoBehaviour
 
     [Tooltip("For locking the camera position on all axis")]
     public bool LockCameraPosition = false;
-
+    private float sensitivity = 1f;
     // cinemachine
     private float _cinemachineTargetYaw;
     private float _cinemachineTargetPitch;
 
     private const float _threshold = 0.01f;
+
+    [Header("Shoot")]
+    [SerializeField] private Transform ProjectileSpawnPosition;
+    [SerializeField] private ParticleSystem BulletPrefab;
     #endregion
 
     private void Awake()
     {
         _playerState = PlayerState.Normal;
+
         //Get References
         _characterController = GetComponent<CharacterController>();
         _playerInput = GetComponent<PlayerInput>();
         _input = GetComponent<PlayerControls>();
         _animator = GetComponent<Animator>();
         _playerStats = GetComponent<PlayerStats>();
+        _playerStamina = GetComponent<PlayerStamina>();
         _levelSystem = GetComponent<LevelSystem>();
+        _playerAimController = GetComponent<PlayerAimController>();
 
         DesactivateCharacterController(); //Desactivate characterController to move player position
                                           //Because Character controller overwrites player.transform.position to its previous position
-
         canDash = true;
         EventManager.AddHandler(EventManager.EVENT.OnPause, UnlockCursor);
         EventManager.AddHandler(EventManager.EVENT.OnResume, LockCursor);
+    }
+
+    private void Start()
+    {
     }
 
     private void OnDisable()
@@ -102,6 +119,7 @@ public class PlayerController : MonoBehaviour
                 Shoot();
                 break;
             case PlayerState.Tired:
+                Jump();
                 HandleMovement();
                 break;
             case PlayerState.Dead:
@@ -117,6 +135,7 @@ public class PlayerController : MonoBehaviour
                 Look();
                 break;
             case PlayerState.Tired:
+                LockInputs();
                 Look();
                 break;
             case PlayerState.Dead:
@@ -157,9 +176,6 @@ public class PlayerController : MonoBehaviour
 
         //Rotate towards camera
         float targetAngle = Mathf.Atan2(direction.x,direction.z) * Mathf.Rad2Deg + cameraTransform.eulerAngles.y;
-        Quaternion rotation = Quaternion.Euler(0,targetAngle, 0);
-        transform.rotation = Quaternion.Lerp(transform.rotation, rotation, softRotation * Time.deltaTime);
-
         Vector3 targetDirection = Quaternion.Euler(0.0f, targetAngle, 0.0f) * Vector3.forward;
         
         //If dash input pressed and player not tired
@@ -188,13 +204,14 @@ public class PlayerController : MonoBehaviour
             }
 
             //Jump
-            if (_input.Jump)
+            if (_input.Jump && _playerState != PlayerState.Tired)
             {
                 verticalVelocity.y = Mathf.Sqrt(jumpHeight * -2 * gravityValue); //velocity to reach desired height
                 _animator.SetTrigger("Jump");
+                _playerStamina.ConsumeEnergy(jumpStaminaCost);
             }
         }
-        else {
+        {
             _input.Jump = false;
         }
     }
@@ -206,11 +223,8 @@ public class PlayerController : MonoBehaviour
         // if there is an input and camera position is not fixed
         if (_input.Look.sqrMagnitude >= _threshold && !LockCameraPosition)
         {
-            //Don't multiply mouse input by Time.deltaTime;
-            float deltaTimeMultiplier = Time.deltaTime;
-
-            _cinemachineTargetYaw += _input.Look.x * deltaTimeMultiplier;
-            _cinemachineTargetPitch += _input.Look.y * deltaTimeMultiplier;
+            _cinemachineTargetYaw += _input.Look.x * Time.deltaTime * sensitivity;
+            _cinemachineTargetPitch += _input.Look.y * Time.deltaTime * sensitivity;
         }
 
         // clamp our rotations so our values are limited 360 degrees
@@ -244,6 +258,7 @@ public class PlayerController : MonoBehaviour
     private IEnumerator Dash(Vector3 targetDirection)
     {
         canDash = false;
+        _playerStamina.ConsumeEnergy(dashStaminaCost);
         _input.Dash = false;
         float startTime = Time.time;
         while (Time.time < startTime + dashTime) {
@@ -254,7 +269,15 @@ public class PlayerController : MonoBehaviour
     }
 
     private void Shoot() {
-        throw new NotImplementedException();
+        if (_input.Shoot)
+        {
+            Vector3 aimDir = (_playerAimController.GetMouseWorldPosition() - ProjectileSpawnPosition.position).normalized;
+            BulletPrefab.gameObject.transform.position = ProjectileSpawnPosition.position;
+            BulletPrefab.gameObject.transform.rotation = Quaternion.LookRotation(aimDir,Vector3.up);
+            BulletPrefab.Play();
+            _playerStamina.ConsumeEnergy(shootStaminaCost);
+            _input.Shoot = false;
+        }
     }
 
     public void SetPlayerState(PlayerState playerState)
@@ -277,5 +300,20 @@ public class PlayerController : MonoBehaviour
 
     public void ActivateCharacterController() {
         _characterController.enabled = true;
+    }
+
+    /// <summary>
+    /// During Tired Stat not allow to jump, dash or shoot
+    /// </summary>
+    private void LockInputs()
+    {
+        _input.Dash = false;
+        _input.Shoot = false;
+        _input.Jump = false;
+    }
+
+    public void SetSensitivity(float newSensitivity)
+    {
+        sensitivity = newSensitivity;
     }
 }

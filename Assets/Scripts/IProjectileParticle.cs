@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IProjectile
+public interface IProjectileParticle
 {
     Transform ProjectileSpawnPosition { get; }
-    GameObject BulletPrefab { get; }
+    ParticleSystem BulletPrefab { get; }
     void Shoot() { }
 }

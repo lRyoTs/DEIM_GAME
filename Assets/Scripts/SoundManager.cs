@@ -50,6 +50,7 @@ public static class SoundManager
     {
         audioSource.clip = GetAudioClipFromSound(sound);
         audioSource.Play();
+        audioSource.loop = true;
     }
 
     private static AudioClip GetAudioClipFromSound(Sound sound)

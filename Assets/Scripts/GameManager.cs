@@ -72,9 +72,10 @@ public class GameManager : MonoBehaviour
     {
         //Initialize Player
         playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        //Check if there is a saveFile in position
         if (PlayerPrefs.HasKey(DataPersistence.PLAYER_POS_X) && PlayerPrefs.HasKey(DataPersistence.PLAYER_POS_Y) && PlayerPrefs.HasKey(DataPersistence.PLAYER_POS_Z))
         {
-            spawnPosition.transform.position = DataPersistence.Instance.PlayerWorldPosition;
+            spawnPosition.transform.position = DataPersistence.Instance.PlayerWorldPosition; //If there are set new spawnPosition
         }
         playerController.transform.position = spawnPosition.transform.position;
         playerController.ActivateCharacterController(); //Activate Character Controller
@@ -96,7 +97,6 @@ public class GameManager : MonoBehaviour
     {
         isWin = true;
         WinUI.Instance.Show();
-        //Lose Sound
 
         //Update DataPersistence
         DataPersistence.Instance.PlayerCurrentLevel = playerLevel.Level;
