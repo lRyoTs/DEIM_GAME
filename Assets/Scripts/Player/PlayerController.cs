@@ -275,6 +275,7 @@ public class PlayerController : MonoBehaviour
             BulletPrefab.gameObject.transform.rotation = Quaternion.LookRotation(aimDir, Vector3.up);
             BulletPrefab.Play();
             _playerStamina.ConsumeEnergy(shootStaminaCost);
+            SoundManager.PlaySound(SoundManager.Sound.Shoot);
             _input.Shoot = false;
         }
     }

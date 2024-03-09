@@ -2471,12 +2471,14 @@ MonoBehaviour:
   soundAudioClipsArray:
   - sound: 0
     audioClip: {fileID: 8300000, guid: 92a9e43fff420054ab5f593974e0a8bd, type: 3}
-  - sound: 3
+  - sound: 5
     audioClip: {fileID: 8300000, guid: 4d5d46e2e13ceb34a831a228c020cdbd, type: 3}
-  - sound: 2
+  - sound: 4
     audioClip: {fileID: 8300000, guid: d8d23ed17ada3d044a6fda946e91054e, type: 3}
   - sound: 1
     audioClip: {fileID: 8300000, guid: 661cc4f1b9f23b849aef60952e33f384, type: 3}
+  - sound: 2
+    audioClip: {fileID: 8300000, guid: 7a42211086b065d42abc18ba81f90a73, type: 3}
 --- !u!4 &2131924345
 Transform:
   m_ObjectHideFlags: 0

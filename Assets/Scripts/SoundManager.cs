@@ -9,6 +9,8 @@ public static class SoundManager
     {
         Click,
         Save,
+        Shoot,
+        Restore,
         Menu,
         Exploration,
     }

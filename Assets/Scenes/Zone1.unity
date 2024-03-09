@@ -980,7 +980,7 @@ PrefabInstance:
     - target: {fileID: 6550554271745052751, guid: 9615a1aa7b2477140b0b73b8c62a1cfd,
         type: 3}
       propertyPath: message
-      value: This is a CHECKPOINT to save your progress
+      value: This is a CHECKPOINT, INTERACT with E to save your progress
       objectReference: {fileID: 0}
     - target: {fileID: 6550554271745052751, guid: 9615a1aa7b2477140b0b73b8c62a1cfd,
         type: 3}
@@ -3754,6 +3754,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45e653bab7fb20e499bda25e1b646fea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1234187778 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3861887087556383731, guid: f0bd9af46bc6d4f41a6fddfb5f6da9f6,
+    type: 3}
+  m_PrefabInstance: {fileID: 1433645987}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1234187779 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1958251249582104942, guid: f0bd9af46bc6d4f41a6fddfb5f6da9f6,
+    type: 3}
+  m_PrefabInstance: {fileID: 1433645987}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1247589183
 GameObject:
   m_ObjectHideFlags: 0
@@ -6190,6 +6214,11 @@ PrefabInstance:
       objectReference: {fileID: 1433645993}
     - target: {fileID: 741539683548453585, guid: 6557a19e8ed4cb84aad24990b2c8c27f,
         type: 3}
+      propertyPath: staminaText
+      value: 
+      objectReference: {fileID: 1234187779}
+    - target: {fileID: 741539683548453585, guid: 6557a19e8ed4cb84aad24990b2c8c27f,
+        type: 3}
       propertyPath: backStaminaBar
       value: 
       objectReference: {fileID: 1433645992}
@@ -6218,6 +6247,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 4931777180862412098, guid: 6557a19e8ed4cb84aad24990b2c8c27f,
+        type: 3}
+      propertyPath: playerHpText
+      value: 
+      objectReference: {fileID: 1234187778}
     - target: {fileID: 4931777180862412098, guid: 6557a19e8ed4cb84aad24990b2c8c27f,
         type: 3}
       propertyPath: backHealthBar
