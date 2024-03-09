@@ -8,6 +8,7 @@ public class CheckPoint : MonoBehaviour
     private PlayerController player;
     private PlayerControls playerInput;
     private LevelSystem playerLevel;
+    private PlayerStamina playerStamina;
 
     [Header("CheckPoint UI")]
     [SerializeField] private ParticleSystem checkpointParticles;
@@ -19,6 +20,7 @@ public class CheckPoint : MonoBehaviour
         player = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
         playerInput = player.GetComponent<PlayerControls>();
         playerLevel = player.GetComponent<LevelSystem>();
+        playerStamina = player.GetComponent<PlayerStamina>();
 
     }
 
@@ -28,6 +30,8 @@ public class CheckPoint : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             player.GetComponent<PlayerLife>().RestoreToMaxHealth();
+            playerStamina.SetMaxStamina();
+            
             DataPersistence.Instance.PlayerWorldPosition = player.transform.position;
             DataPersistence.Instance.PlayerCurrentLevel = playerLevel.Level;
             DataPersistence.Instance.PlayerCurrentExp = (int)playerLevel.CurrentXp;

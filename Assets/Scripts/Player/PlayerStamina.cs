@@ -24,11 +24,13 @@ public class PlayerStamina : MonoBehaviour
     [SerializeField] private Image frontStaminaBar;
     [SerializeField] private Image backStaminaBar;
     [SerializeField] private TextMeshProUGUI fatigueText;
+    [SerializeField] private TextMeshProUGUI staminaText;
 
     private void Awake()
     {
         _playerController = GetComponent<PlayerController>();
         HideFatigueText();
+        EventManager.AddHandler(EventManager.EVENT.OnLevelUp,SetMaxStamina);
     }
 
     // Start is called before the first frame update
@@ -43,6 +45,11 @@ public class PlayerStamina : MonoBehaviour
     {
         currentStamina = Mathf.Clamp(currentStamina, 0, MAX_STAMINA);
         UpdateStaminaUI();
+    }
+
+    private void OnDisable()
+    {
+        EventManager.RemoveHandler(EventManager.EVENT.OnLevelUp, SetMaxStamina);    
     }
 
     public void UpdateStaminaUI()
@@ -68,6 +75,7 @@ public class PlayerStamina : MonoBehaviour
             float percentComplete = lerpTimer / chipSpeed;
             frontStaminaBar.fillAmount = Mathf.Lerp(fillF, backStaminaBar.fillAmount, percentComplete);
         }
+        staminaText.text = $"{currentStamina} / {MAX_STAMINA}";
     }
     public void ConsumeEnergy(float energyConsumed)
     {
@@ -90,6 +98,11 @@ public class PlayerStamina : MonoBehaviour
     }
 
     public void InitializedPlayerStamina()
+    {
+        currentStamina = MAX_STAMINA;
+    }
+
+    public void SetMaxStamina()
     {
         currentStamina = MAX_STAMINA;
     }

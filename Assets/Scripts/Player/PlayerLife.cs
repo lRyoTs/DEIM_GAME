@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,6 +17,7 @@ public class PlayerLife : MonoBehaviour
     [SerializeField] private float chipSpeed = 2f;
     [SerializeField] public Image frontHealthBar;
     [SerializeField] public Image backHealthBar;
+    [SerializeField] public TextMeshProUGUI playerHpText;
 
     public bool isDead { get; private set;}
     private bool canTakeDamage = true;
@@ -71,6 +73,7 @@ public class PlayerLife : MonoBehaviour
             float percentComplete = lerpTimer / chipSpeed;
             frontHealthBar.fillAmount = Mathf.Lerp(fillF, backHealthBar.fillAmount, percentComplete);
         }
+        playerHpText.text = $"{health} / {maxHealth}";
     }
 
     public void TakeDamage(float damage) {

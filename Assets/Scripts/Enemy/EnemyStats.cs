@@ -19,6 +19,7 @@ public class EnemyStats : MonoBehaviour
     [SerializeField] private int baseDmg = 10;
 
     [Header("Enemy Info")]
+    [SerializeField] private bool isFixedLevel = false;
     [SerializeField] private int level = 1;
     [SerializeField] private float enemySpeed;
 
@@ -39,7 +40,11 @@ public class EnemyStats : MonoBehaviour
 
     private void Start()
     {
-        SetEnemyLevel();
+        //If enemy has a fixed level
+        if (!isFixedLevel)
+        {
+            SetEnemyLevel();
+        }
         CalculateStats();
         enemyInfo.text = $"Lv{level} {enemyName}";
     }

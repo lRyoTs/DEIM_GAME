@@ -100,7 +100,6 @@ public class WorldEnemy : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player")) {
             player.GetComponent<PlayerLife>().TakeDamage(_enemyStats.GetDamage());
-            _enemyLife.TakeDamage(player.GetComponent<PlayerStats>().GetAttackDmg());
         }
     }
 

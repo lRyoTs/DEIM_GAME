@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1653553583373799876}
   - component: {fileID: 6446029254888176429}
   - component: {fileID: 8053500367644701735}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -117,7 +117,7 @@ GameObject:
   - component: {fileID: 544320277691514360}
   - component: {fileID: 3028575444704080149}
   - component: {fileID: 5505979625224071364}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -218,7 +218,7 @@ GameObject:
   - component: {fileID: 3876502573103090920}
   - component: {fileID: 2098305290982172099}
   - component: {fileID: 3359052372736527521}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Particles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5047,7 +5047,7 @@ GameObject:
   - component: {fileID: 4817280416640827866}
   - component: {fileID: 6364704689029959001}
   - component: {fileID: 8680416887029238703}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5155,7 +5155,7 @@ GameObject:
   - component: {fileID: 2396233329585989595}
   - component: {fileID: 8320819097024940618}
   - component: {fileID: 4472078832922242663}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Checkpoint 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5225,7 +5225,7 @@ GameObject:
   - component: {fileID: 5925466874685862076}
   - component: {fileID: 9065786790960614371}
   - component: {fileID: 5617573551840854835}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
