@@ -15,6 +15,7 @@ public static class Loader
         LoadingScene,
         BattleScene,
         Zone1,
+        Zone2,
         BossZone
     }
 

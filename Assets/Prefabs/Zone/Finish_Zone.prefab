@@ -76,7 +76,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25d7c8755dcf9e143bf2c3ba45918cf6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  goalIcon: {fileID: 0}
+  goalIcon: {fileID: 5892777933415598508}
   nextScene: 
 --- !u!1 &3811041994306041284
 GameObject:
@@ -206,7 +206,7 @@ GameObject:
   - component: {fileID: 8364309530351168052}
   - component: {fileID: 8630596552886809806}
   m_Layer: 9
-  m_Name: Image
+  m_Name: GoalImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

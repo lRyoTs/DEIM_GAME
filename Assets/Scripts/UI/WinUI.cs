@@ -42,4 +42,9 @@ public class WinUI : MonoBehaviour
         gameObject.SetActive(true);
     }
 
+    public void HideNextLevelButton()
+    {
+        nextLevelButton.gameObject.SetActive(false);
+    }
+
 }

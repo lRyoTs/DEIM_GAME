@@ -12,6 +12,7 @@ public class Finish : MonoBehaviour
         if(nextScene == "")
         {
             nextScene = Loader.GetCurrentScene().ToString();
+            WinUI.Instance.HideNextLevelButton();
         }
     }
     private void OnTriggerEnter(Collider other)

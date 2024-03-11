@@ -661,6 +661,7 @@ MonoBehaviour:
   baseHp: 10
   baseExp: 30
   baseDmg: 10
+  isFixedLevel: 0
   level: 1
   enemySpeed: 5
   enemyName: BoxFace

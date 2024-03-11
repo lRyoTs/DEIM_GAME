@@ -14,7 +14,6 @@ public class PlayerAimController : MonoBehaviour
     [SerializeField] private LayerMask aimColliderLayerMask;
     [SerializeField] private float normalSensitivity = 1f;
     [SerializeField] private float aimSensitivity = 0.5f;
-    [SerializeField] private Transform debugTansform;
 
     private Vector3 mouseWorldPosition;
 
@@ -60,7 +59,6 @@ public class PlayerAimController : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(screenCenterPoint);
         if (Physics.Raycast(ray, out RaycastHit raycastHit, 999f, aimColliderLayerMask))
         {
-            debugTansform.position = raycastHit.point;
             mouseWorldPosition = raycastHit.point;
         }
 
