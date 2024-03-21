@@ -30,14 +30,14 @@ public class MainMenuUI : MonoBehaviour
         newGameButton.onClick.AddListener(() =>
         {
             SoundManager.PlaySound(SoundManager.Sound.Click);
-            DataPersistence.Instance.DeletePlayerPrefs();
-            DataPersistence.Instance.GetInfoFromPlayerPrefs();
+            DataPersistence.Instance.DeletePlayerPrefsInfo();
+            DataPersistence.Instance.LoadFromPlayerPrefs();
             Loader.Load(Loader.Scene.Zone1);
         });
 
         continueGameButton.onClick.AddListener(() =>
         {
-            DataPersistence.Instance.GetInfoFromPlayerPrefs();
+            DataPersistence.Instance.LoadFromPlayerPrefs();
             Loader.Load(DataPersistence.Instance.CurrentScene);
         });
 

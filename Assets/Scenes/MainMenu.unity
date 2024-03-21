@@ -2100,7 +2100,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: bf1558e5593dbd34d952d72cd9b7527d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6076231487a55454bb1e288de6f2571d, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2204,8 +2204,8 @@ Camera:
   m_GameObject: {fileID: 1922846250}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0.70980394, g: 0.51565516, b: 0.2035867, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -2284,7 +2284,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
+  m_RenderPostProcessing: 1
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -2471,12 +2471,14 @@ MonoBehaviour:
   soundAudioClipsArray:
   - sound: 0
     audioClip: {fileID: 8300000, guid: 92a9e43fff420054ab5f593974e0a8bd, type: 3}
-  - sound: 3
+  - sound: 5
     audioClip: {fileID: 8300000, guid: 4d5d46e2e13ceb34a831a228c020cdbd, type: 3}
-  - sound: 2
+  - sound: 4
     audioClip: {fileID: 8300000, guid: d8d23ed17ada3d044a6fda946e91054e, type: 3}
   - sound: 1
     audioClip: {fileID: 8300000, guid: 661cc4f1b9f23b849aef60952e33f384, type: 3}
+  - sound: 2
+    audioClip: {fileID: 8300000, guid: 7a42211086b065d42abc18ba81f90a73, type: 3}
 --- !u!4 &2131924345
 Transform:
   m_ObjectHideFlags: 0

@@ -7,9 +7,16 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set;}
+
+    [Header("References")]
+    private PlayerController playerController;
+    private LevelSystem playerLevel;
     [SerializeField] private GameObject spawnPosition;
-    [SerializeField] private GameObject player;
+
+    [Header("Game Manager Logic")]
     private bool isPaused = false;
+    private bool isLose = false;
+    private bool isWin = false;
 
     private void Awake()
     {
@@ -17,11 +24,10 @@ public class GameManager : MonoBehaviour
             Debug.Log("There is more than 1 Instance of GameManager");
         }
         Instance = this;
-        
-        if(PlayerPrefs.HasKey(DataPersistence.PLAYER_POS_X)&&PlayerPrefs.HasKey(DataPersistence.PLAYER_POS_Y)&&PlayerPrefs.HasKey(DataPersistence.PLAYER_POS_Z))
-        {
-            spawnPosition.transform.position = DataPersistence.Instance.PlayerWorldPosition;
-        }
+
+        isPaused = false;
+        isLose = false;
+        isWin = false;
     }
     // Start is called before the first frame update
     void Start()
@@ -32,17 +38,19 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (!IsFinish())
         {
-            if (!isPaused)
+            if (Input.GetKeyDown(KeyCode.Escape))
             {
-                PauseGame();
+                if (!isPaused)
+                {
+                    PauseGame();
+                }
+                else
+                {
+                    ResumeGame();
+                } 
             }
-            else
-            {
-                ResumeGame();
-            }
-            
         }
     }
 
@@ -62,10 +70,50 @@ public class GameManager : MonoBehaviour
 
     private void StartGame()
     {
-        player.transform.position = spawnPosition.transform.position;
-        player.transform.rotation = spawnPosition.transform.rotation;
+        //Initialize Player
+        playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        //Check if there is a saveFile in position
+        if (PlayerPrefs.HasKey(DataPersistence.PLAYER_POS_X) && PlayerPrefs.HasKey(DataPersistence.PLAYER_POS_Y) && PlayerPrefs.HasKey(DataPersistence.PLAYER_POS_Z))
+        {
+            spawnPosition.transform.position = DataPersistence.Instance.PlayerWorldPosition; //If there are set new spawnPosition
+        }
+        playerController.transform.position = spawnPosition.transform.position;
+        playerController.ActivateCharacterController(); //Activate Character Controller
+        playerLevel = playerController.GetComponent<LevelSystem>();
+        playerLevel.InitializedLevelSystem();
+        playerController.GetComponent<PlayerStats>().CalculateStats();
+        
+        Cursor.lockState = CursorLockMode.Locked;
         SoundManager.CreateSoundManagerGameobject();
         SoundManager.PlaySong(SoundManager.Sound.Exploration);
         DataPersistence.Instance.CurrentScene = Loader.GetCurrentScene();
+    }
+
+    public bool IsFinish() {
+        return isWin || isLose;
+    }
+
+    public void IsWin()
+    {
+        isWin = true;
+        WinUI.Instance.Show();
+
+        //Update DataPersistence
+        DataPersistence.Instance.PlayerCurrentLevel = playerLevel.Level;
+        DataPersistence.Instance.PlayerCurrentExp = (int)playerLevel.CurrentXp;
+        //Save in PlayerPrefs
+        DataPersistence.Instance.DeletePlayerWorldPos();
+        DataPersistence.Instance.SaveInPlayerPrefsProgress();
+
+        Cursor.lockState = CursorLockMode.None;
+    }
+
+    public void IsLose()
+    {
+        isLose = true;
+        LoseUI.Instance.Show();
+
+        //Lose Sound
+        Cursor.lockState= CursorLockMode.None;
     }
 }

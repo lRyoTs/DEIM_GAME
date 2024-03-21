@@ -10,50 +10,74 @@ using UnityEngine.AI;
 public class WorldEnemy : MonoBehaviour
 {
     [Header("References")]
-    private NavMeshAgent m_Agent;
-    [SerializeField] private GameObject player;
+    private NavMeshAgent _navMeshAgent;
+    [SerializeField] private Transform player;
+    private Animator _animator;
+    private EnemyStats _enemyStats;
+    private EnemyLife _enemyLife;
 
     [Header("World Atrributes")]
     private Vector3 startPosition;
     [SerializeField] int roamRadius;
-    [SerializeField] private float enemySpeed;
     [SerializeField] private LayerMask playerLayerMask;
     [SerializeField] private float visionRange;
     private bool inVisionRange = false; //Check if the player is in Vision range
-    [SerializeField] private int baseDamage = 15;
 
-    [Header("Battle Enemy Info")]
-    [SerializeField] private List<GameObject> enemyList = new List<GameObject>();
+    [Header("Attack")]
+    [SerializeField] protected float attackCooldownTimer = 2f;
+    [SerializeField] protected float attackRange;
+    protected bool inAttackRange;
+    protected bool canAttack;
+
 
 
     private void Awake()
     {
-        m_Agent = GetComponent<NavMeshAgent>();
+        _navMeshAgent = GetComponent<NavMeshAgent>();
+        _animator = GetComponent<Animator>();
+        _enemyStats = GetComponent<EnemyStats>();
+        _enemyLife = GetComponent<EnemyLife>();
         startPosition = transform.position;
+        canAttack = true;
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        player = GameObject.FindWithTag("Player");
+        player = GameObject.FindWithTag("Player").transform;
     }
 
     // Update is called once per frame
     void Update()
     {
+        inAttackRange = Physics.CheckSphere(transform.position,attackRange,playerLayerMask);
         inVisionRange = Physics.CheckSphere(transform.position,visionRange,playerLayerMask);
-        if (!inVisionRange)
+        if (inAttackRange && canAttack)
+        {
+            Attack();
+        }
+        else if(inVisionRange){
+            
+            Follow();
+        }
+        else
         {
             Patrol();
         }
-        else {
-            Follow();
-        }
+    }
+
+    private void LateUpdate()
+    { 
+        _animator.SetBool("Walk",_navMeshAgent.hasPath);
+    }
+
+    private void OnDisable()
+    {
     }
 
     private void Patrol() {
         
-        if (!m_Agent.pathPending && !m_Agent.hasPath) //If agent doesnt have a destination provided
+        if (!_navMeshAgent.pathPending && !_navMeshAgent.hasPath) //If agent doesnt have a destination provided
         {
             FreeRoam(); //Get new destination
         }
@@ -61,14 +85,21 @@ public class WorldEnemy : MonoBehaviour
     }
 
     private void Follow() {
-        m_Agent.SetDestination(player.transform.position);
+        _navMeshAgent.SetDestination(player.position);
+    }
+
+    private void Attack() {
+        _navMeshAgent.SetDestination(transform.position);
+        transform.LookAt(player);
+        StartCoroutine("AttackCooldown");
+        _animator.SetTrigger("Attack");
+
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Player")) {
-            player.GetComponent<PlayerLife>().TakeDamage(baseDamage);
-            PostProcesingManager.instance.VignetteOn();
+            player.GetComponent<PlayerLife>().TakeDamage(_enemyStats.GetDamage());
         }
     }
 
@@ -84,17 +115,30 @@ public class WorldEnemy : MonoBehaviour
         Vector3 finalPosition = hit.position;
 
         //Check if the path is posible
-        if (!m_Agent.SetDestination(finalPosition))
+        if (!_navMeshAgent.SetDestination(finalPosition))
         {
-            m_Agent.SetDestination(startPosition); //If not, return to initial position
+            _navMeshAgent.SetDestination(startPosition); //If not, return to initial position
         }
+    }
+
+    private IEnumerator AttackCooldown() {
+
+        canAttack = false;
+        yield return new WaitForSeconds(attackCooldownTimer);
+        canAttack = true;
     }
 
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(startPosition, roamRadius);
-        Gizmos.color = Color.red;
+        Gizmos.color = Color.gray;
         Gizmos.DrawWireSphere(transform.position, visionRange);
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(transform.position,transform.forward*attackRange);
     }
 
+    public void GiveExpValue()
+    {
+        player.GetComponent<LevelSystem>().GainExperienceFlatRate(_enemyStats.GetExperienceValue());
+    }
 }

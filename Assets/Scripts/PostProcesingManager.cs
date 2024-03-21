@@ -19,6 +19,7 @@ public class PostProcesingManager : MonoBehaviour
         instance = this;
 
         volumen = GetComponent<Volume>();
+        EventManager.AddHandler(EventManager.EVENT.OnHit, VignetteOn);
     }
 
     // Start is called before the first frame update
@@ -30,6 +31,7 @@ public class PostProcesingManager : MonoBehaviour
 
     private void OnDisable()
     {
+        EventManager.RemoveHandler(EventManager.EVENT.OnHit, VignetteOn);
     }
 
     public void VignetteOn()

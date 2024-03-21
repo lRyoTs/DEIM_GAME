@@ -12,9 +12,10 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] private int baseAttack;
 
     [Header("Player Stats")]
-    [SerializeField] private int maxHp;
-    [SerializeField] private int attackCeilling;
-    [SerializeField] private int attackFloor;
+    private int maxHp;
+    private int attackCeilling;
+    private int attackFloor;
+
 
     private void Awake()
     {
@@ -22,11 +23,6 @@ public class PlayerStats : MonoBehaviour
         _playerLife = GetComponent<PlayerLife>();
         
         EventManager.AddHandler(EventManager.EVENT.OnLevelUp,CalculateStats);
-    }
-
-    private void Start()
-    {
-        CalculateStats();
     }
 
     private void OnDisable()

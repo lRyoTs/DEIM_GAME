@@ -14,7 +14,9 @@ public static class Loader
         MainMenu,
         LoadingScene,
         BattleScene,
-        Zone1
+        Zone1,
+        Zone2,
+        BossZone
     }
 
     private static Scene sceneAux;

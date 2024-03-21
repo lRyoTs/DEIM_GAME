@@ -4,12 +4,24 @@ using UnityEngine;
 
 public class Finish : MonoBehaviour
 {
-    [SerializeField] private GameObject finishPanel;
+    [SerializeField] private GameObject goalIcon;
+    [SerializeField] private string nextScene;
+
+    private void Start()
+    {
+        if(nextScene == "")
+        {
+            nextScene = Loader.GetCurrentScene().ToString();
+            WinUI.Instance.HideNextLevelButton();
+        }
+    }
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            finishPanel.SetActive(true);
+            //Update DataPersistence to next Level
+            DataPersistence.Instance.CurrentScene = nextScene;
+            GameManager.Instance.IsWin();
         }
     }
     
